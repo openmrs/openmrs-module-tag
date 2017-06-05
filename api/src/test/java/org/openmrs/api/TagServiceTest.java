@@ -10,15 +10,19 @@
 package org.openmrs.api;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.User;
-import org.openmrs.api.UserService;
 import org.openmrs.Tag;
-import org.openmrs.api.dao.TagDao;
+import org.openmrs.api.context.Context;
+import org.openmrs.api.db.TagDAO;
 import org.openmrs.api.impl.TagServiceImpl;
+
+import java.util.Date;
+
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -33,10 +37,13 @@ public class TagServiceTest {
 	TagServiceImpl basicModuleService;
 	
 	@Mock
-	TagDao dao;
+	TagDAO dao;
 	
 	@Mock
 	UserService userService;
+	
+	@Mock
+	ConceptService conceptService;
 	
 	@Before
 	public void setupMocks() {
@@ -44,10 +51,9 @@ public class TagServiceTest {
 	}
 	
 	@Test
-	public void saveItem_shouldSetOwnerIfNotSet() {
+	public void saveTag_shouldSetCreatorIfNotSet() {
 		//Given
 		Tag tag = new Tag();
-		tag.setDescription("some description");
 		
 		when(dao.saveTag(tag)).thenReturn(tag);
 		
@@ -58,6 +64,26 @@ public class TagServiceTest {
 		basicModuleService.saveTag(tag);
 		
 		//Then
-		assertThat(tag, hasProperty("owner", is(user)));
+		assertThat(tag, hasProperty("creator", is(user)));
+	}
+	
+	@Test
+	//	@Ignore
+	public void saveTag_shouldPersist() {
+		Tag tag = new Tag();
+		tag.setTagName("Initial");
+		tag.setObjectUuid("asndassdwrasndassdwrasndassdwrasndassd");
+		tag.setObjectType("Concept");
+		tag.setCreator(userService.getUser(1));
+		Date date = new Date();
+		date.setTime(1112);
+		tag.setDateCreated(date);
+		dao.saveTag(tag);
+		System.out.println(tag);
+		Context.flushSession();
+		Context.clearSession();
+		Tag saveTag = new Tag();
+		saveTag = dao.getTagByUuid("asndassdwrasndassdwrasndassdwrasndassd");
+		System.out.println(tag);
 	}
 }

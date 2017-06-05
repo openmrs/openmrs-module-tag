@@ -27,14 +27,20 @@
 
     <!-- Wraps TagService methods in DB transactions and OpenMRS interceptors,
     which set audit info like dateCreated, changedBy, etc.-->
-    <bean id="tag.TagService"
+    <bean id="tagService"
             class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager">
             <ref bean="transactionManager" />
         </property>
         <property name="target">
             <bean class="org.openmrs.api.impl.TagServiceImpl">
-                <property name="dao" ref="tag.TagDao" />
+                <property name="dao">
+                    <bean class="org.openmrs.api.db.hibernate.HibernateTagDao">
+                        <property name="sessionFactory">
+                            <ref bean="dbSessionFactory" />
+                        </property>
+                    </bean>
+                </property>
             </bean>
         </property>
         <property name="preInterceptors">
@@ -45,13 +51,34 @@
         </property>
     </bean>
 
+
+    <bean id="tagDAO"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="target">
+            <bean class="org.openmrs.api.db.hibernate.HibernateTagDao">
+                <property name="sessionFactory">
+                    <ref bean="dbSessionFactory"/>
+                </property>
+            </bean>
+        </property>
+        <property name="preInterceptors">
+            <ref bean="serviceInterceptors"/>
+        </property>
+        <property name="transactionAttributeSource">
+            <ref bean="transactionAttributeSource"/>
+        </property>
+    </bean>
+
     <!-- Adds TagService to OpenMRS context so it can be accessed
     calling Context.getService(TagService.class) -->
     <bean parent="serviceContext">
         <property name="moduleService">
             <list>
                 <value>org.openmrs.api.TagService</value>
-                <ref bean="tag.TagService" />
+                <ref bean="tagService"/>
             </list>
         </property>
     </bean>

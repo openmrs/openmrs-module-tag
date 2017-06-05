@@ -7,20 +7,40 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.api.dao;
+package org.openmrs.api.db.hibernate;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.api.db.TagDAO;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-@Repository("tag.TagDao")
-public class TagDao {
+@Repository("tagDAO")
+public class HibernateTagDao implements TagDAO {
+	
+	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	@Autowired
-	DbSessionFactory sessionFactory;
+	private DbSessionFactory sessionFactory;
+	
+	/**
+	 * @param sessionFactory the sessionFactory to set
+	 */
+	public void setSessionFactory(DbSessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
+	/**
+	 * @return the sessionFactory
+	 */
+	public DbSessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
 	
 	private DbSession getSession() {
 		return sessionFactory.getCurrentSession();
@@ -30,8 +50,8 @@ public class TagDao {
 		return (Tag) getSession().createCriteria(Tag.class).add(Restrictions.eq("uuid", uuid)).uniqueResult();
 	}
 	
-	public Tag saveTag(Tag item) {
-		getSession().saveOrUpdate(item);
-		return item;
+	public Tag saveTag(Tag tag) {
+		getSession().saveOrUpdate(tag);
+		return tag;
 	}
 }
