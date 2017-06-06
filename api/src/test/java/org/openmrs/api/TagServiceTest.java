@@ -20,6 +20,7 @@ import org.openmrs.Tag;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.TagDAO;
 import org.openmrs.api.impl.TagServiceImpl;
+import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 import java.util.Date;
 
@@ -31,7 +32,7 @@ import static org.junit.Assert.*;
  * This is a unit test, which verifies logic in TagService. It doesn't extend
  * BaseModuleContextSensitiveTest, thus it is run without the in-memory DB and Spring context.
  */
-public class TagServiceTest {
+public class TagServiceTest extends BaseModuleContextSensitiveTest {
 	
 	@InjectMocks
 	TagServiceImpl basicModuleService;
@@ -71,9 +72,9 @@ public class TagServiceTest {
 	//	@Ignore
 	public void saveTag_shouldPersist() {
 		Tag tag = new Tag();
-		tag.setTagName("Initial");
-		tag.setObjectUuid("asndassdwrasndassdwrasndassdwrasndassd");
-		tag.setObjectType("Concept");
+		tag.setTag("Initial");
+		tag.setObject_uuid("asndassdwrasndassdwrasndassdwrasndassd");
+		tag.setObject_uuid("Concept");
 		tag.setCreator(userService.getUser(1));
 		Date date = new Date();
 		date.setTime(1112);

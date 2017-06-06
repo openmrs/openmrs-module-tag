@@ -21,32 +21,32 @@ import java.util.UUID;
  * Please note that a corresponding table schema must be created in liquibase.xml.
  */
 //Uncomment 2 lines below if you want to make the Item class persistable, see also TagDaoTest and liquibase.xml
-@Entity(name = "tag.Tag")
-@Table(name = "tag")
+//@Entity
+//@Table(name = "tag")
 public class Tag extends BaseOpenmrsData implements Serializable {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "tag_id")
+	//	@Id
+	//	@GeneratedValue(strategy = GenerationType.AUTO)
+	//	@Column(name = "tag_id")
 	private Integer id;
 	
-	@Column(name = "tag", length = 50, nullable = false)
-	private String tagName;
+	//	@Column(name = "tag", length = 50, nullable = false)
+	private String tag;
 	
-	@Column(name = "object_uuid", length = 38, nullable = false)
-	private String objectUuid;
+	//	@Column(name = "object_uuid", length = 38, nullable = false)
+	private String object_uuid;
 	
-	@Column(name = "object_type", length = 255, nullable = false)
-	private String objectType;
+	//	@Column(name = "object_type", length = 255, nullable = false)
+	private String object_type;
 	
-	@ManyToOne
-	@JoinColumn(name = "creator")
-	private User Creator;
+	//	@ManyToOne()
+	//	@JoinColumn(name = "creator", updatable = false, insertable = false)
+	private User createdBy;
 	
-	@Column(name = "date_created", nullable = false)
+	//	@Column(name = "date_created", nullable = false)
 	private Date dateCreated;
 	
-	@Column(name = "uuid", unique = true, nullable = false, length = 38)
+	//	@Column(name = "uuid", unique = true, nullable = false, length = 38)
 	private String Uuid = UUID.randomUUID().toString();
 	
 	@Override
@@ -59,38 +59,36 @@ public class Tag extends BaseOpenmrsData implements Serializable {
 		this.id = id;
 	}
 	
-	public String getTagName() {
-		return tagName;
+	public String getTag() {
+		return tag;
 	}
 	
-	public void setTagName(String tagName) {
-		this.tagName = tagName;
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 	
-	public String getObjectUuid() {
-		return objectUuid;
+	public String getObject_uuid() {
+		return object_uuid;
 	}
 	
-	public void setObjectUuid(String objectUuid) {
-		this.objectUuid = objectUuid;
+	public void setObject_uuid(String object_uuid) {
+		this.object_uuid = object_uuid;
 	}
 	
-	public String getObjectType() {
-		return objectType;
+	public String getObject_type() {
+		return object_type;
 	}
 	
-	public void setObjectType(String objectType) {
-		this.objectType = objectType;
+	public void setObject_type(String object_type) {
+		this.object_type = object_type;
 	}
 	
-	@Override
-	public User getCreator() {
-		return Creator;
+	public User getCreatedBy() {
+		return createdBy;
 	}
 	
-	@Override
-	public void setCreator(User creator) {
-		Creator = creator;
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
 	}
 	
 	@Override

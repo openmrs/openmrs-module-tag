@@ -22,6 +22,7 @@ import org.openmrs.api.db.TagDAO;
 import org.openmrs.api.db.hibernate.HibernateTagDao;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -42,16 +43,16 @@ import static org.junit.Assert.*;
 public class TagDaoTest extends BaseModuleContextSensitiveTest {
 	
 	private static final String TAG_INITIAL_XML = "TagServiceDataset.xml";
-
+	
 	@Autowired
-	HibernateTagDao tagDAO;
+	HibernateTagDao tagDao;
 	
 	@Autowired
 	UserService userService;
 	
 	@Before
 	public void runBeforeEachTest() throws Exception {
-		//	executeDataSet(TAG_INITIAL_XML);
+		executeDataSet(TAG_INITIAL_XML);
 	}
 	
 	@Test
@@ -60,9 +61,9 @@ public class TagDaoTest extends BaseModuleContextSensitiveTest {
 		//Given
 		
 		Tag tag = new Tag();
-		tag.setTagName("Initial");
-		tag.setObjectUuid("asndassdwrasndassdwrasndassdwrasndassd");
-		tag.setObjectType("Concept");
+		tag.setTag("Initial");
+		tag.setObject_uuid("asndassdwrasndassdwrasndassdwrasndassd");
+		tag.setObject_type("Concept");
 		tag.setCreator(userService.getUser(1));
 		Date date = new Date();
 		date.setTime(1112);
@@ -72,14 +73,14 @@ public class TagDaoTest extends BaseModuleContextSensitiveTest {
 		//	item.setOwner(userService.getUser(1));
 		
 		//When
-		tagDAO.saveTag(tag);
+		tagDao.saveTag(tag);
 		
 		//Let's clean up the cache to be sure getTagByUuid fetches from DB and not from cache
 		Context.flushSession();
 		Context.clearSession();
 		
 		//Then
-		Tag savedTag = tagDAO.getTagByUuid(tag.getUuid());
+		Tag savedTag = tagDao.getTagByUuid(tag.getUuid());
 		
 		assertThat(savedTag, hasProperty("uuid", is(tag.getUuid())));
 		//	assertThat(savedTag, hasProperty("owner", is(item.getOwner())));
