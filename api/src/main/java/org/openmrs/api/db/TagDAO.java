@@ -16,10 +16,43 @@ package org.openmrs.api.db;
 
 import org.openmrs.Tag;
 
+import java.util.List;
+
 public interface TagDAO {
 	
-	public Tag getTagByUuid(String uuid);
+	/**
+	 * @see org.openmrs.api.TagService#getTagByUuid(String)
+	 */
+	public Tag getTagByUuid(String uuid) throws DAOException;
 	
-	public Tag saveTag(Tag tag);
+	/**
+	 * @see org.openmrs.api.TagService#getTagById(int)
+	 */
+	public Tag getTagById(int id) throws DAOException;
+	
+	/**
+	 * @see org.openmrs.api.TagService#getTagByName(String)
+	 */
+	public List<Tag> getTagByName(String tag) throws DAOException;
+	
+	/**
+	 * @see org.openmrs.api.TagService#saveTag(Tag)
+	 */
+	
+	public Tag saveTag(Tag tag) throws DAOException;
+	
+	/**
+	 * @see org.openmrs.api.TagService#purgeTag(Tag)
+	 */
+	public void deleteTag(Tag tag) throws DAOException;
+	
+	/**
+	 * @see org.openmrs.api.TagService#getAllTags()
+	 */
+	public List<Tag> getAllTags();
+	
+	/**
+	 * @see org.openmrs.api.TagService#getTagById(int)
+	 */
 	
 }

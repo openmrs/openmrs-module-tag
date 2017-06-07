@@ -9,18 +9,20 @@
  */
 package org.openmrs.api;
 
+import org.openmrs.TagConstants;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.TagConfig;
 import org.openmrs.Tag;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * The main service of this module, which is exposed for other modules. See
  * moduleApplicationContext.xml on how it is wired up.
  */
-@Transactional
+
 public interface TagService extends OpenmrsService {
 	
 	/**
@@ -43,7 +45,42 @@ public interface TagService extends OpenmrsService {
 	 * @return
 	 * @throws APIException
 	 */
-	@Authorized(TagConfig.MODULE_PRIVILEGE)
+	@Authorized(TagConstants.MODULE_PRIVILEGE)
 	@Transactional
 	Tag saveTag(Tag tag) throws APIException;
+	
+	/**
+	 * Completely delete the tag from the database.
+	 * 
+	 * @param tag The Tag to remove from the system
+	 * @throws APIException
+	 * @should delete tag from the database
+	 */
+	@Authorized(TagConstants.MODULE_PRIVILEGE)
+	public void purgeTag(Tag tag) throws APIException;
+	
+	/**
+	 * @param id
+	 * @return
+	 * @throws APIException
+	 */
+	@Transactional(readOnly = true)
+	public Tag getTagById(int id) throws APIException;
+	
+	/**
+	 * @param tag
+	 * @return
+	 * @throws APIException
+	 */
+	public List<Tag> getTagByName(String tag) throws APIException;
+	
+	/**
+	 * Returns a list of All Tags.
+	 * 
+	 * @return
+	 * @throws APIException
+	 */
+	@Transactional(readOnly = true)
+	public List<Tag> getAllTags() throws APIException;
+	
 }

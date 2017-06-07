@@ -12,10 +12,10 @@ package org.openmrs;
 import org.springframework.stereotype.Component;
 
 /**
- * Contains module's config.
+ * Contains module's constants.
  */
-@Component("tag.TagConfig")
-public class TagConfig {
+@Component("tagConstants")
+public class TagConstants {
 	
 	public final static String MODULE_PRIVILEGE = "Tag Privilege";
 }

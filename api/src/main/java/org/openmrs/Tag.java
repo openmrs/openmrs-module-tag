@@ -9,10 +9,10 @@
  */
 package org.openmrs;
 
-import org.openmrs.BaseOpenmrsData;
-import org.openmrs.User;
+//import org.openmrs.BaseOpenmrsData;
+//import org.openmrs.User;
 
-import javax.persistence.*;
+//import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
@@ -20,33 +20,24 @@ import java.util.UUID;
 /**
  * Please note that a corresponding table schema must be created in liquibase.xml.
  */
-//Uncomment 2 lines below if you want to make the Item class persistable, see also TagDaoTest and liquibase.xml
-//@Entity
-//@Table(name = "tag")
 public class Tag extends BaseOpenmrsData implements Serializable {
 	
-	//	@Id
-	//	@GeneratedValue(strategy = GenerationType.AUTO)
-	//	@Column(name = "tag_id")
 	private Integer id;
 	
-	//	@Column(name = "tag", length = 50, nullable = false)
 	private String tag;
 	
-	//	@Column(name = "object_uuid", length = 38, nullable = false)
 	private String object_uuid;
 	
-	//	@Column(name = "object_type", length = 255, nullable = false)
 	private String object_type;
 	
-	//	@ManyToOne()
-	//	@JoinColumn(name = "creator", updatable = false, insertable = false)
-	private User createdBy;
+	private User creator;
 	
-	//	@Column(name = "date_created", nullable = false)
 	private Date dateCreated;
 	
-	//	@Column(name = "uuid", unique = true, nullable = false, length = 38)
+	private User changedBy;
+	
+	private Date date_changed;
+	
 	private String Uuid = UUID.randomUUID().toString();
 	
 	@Override
@@ -83,12 +74,12 @@ public class Tag extends BaseOpenmrsData implements Serializable {
 		this.object_type = object_type;
 	}
 	
-	public User getCreatedBy() {
-		return createdBy;
+	public User getCreator() {
+		return creator;
 	}
 	
-	public void setCreatedBy(User createdBy) {
-		this.createdBy = createdBy;
+	public void setCreator(User creator) {
+		this.creator = creator;
 	}
 	
 	@Override
@@ -99,6 +90,24 @@ public class Tag extends BaseOpenmrsData implements Serializable {
 	@Override
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
+	}
+	
+	@Override
+	public User getChangedBy() {
+		return changedBy;
+	}
+	
+	@Override
+	public void setChangedBy(User changedBy) {
+		this.changedBy = changedBy;
+	}
+	
+	public Date getDate_changed() {
+		return date_changed;
+	}
+	
+	public void setDate_changed(Date date_changed) {
+		this.date_changed = date_changed;
 	}
 	
 	@Override

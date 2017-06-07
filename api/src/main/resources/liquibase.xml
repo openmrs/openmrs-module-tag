@@ -35,16 +35,16 @@
         <addForeignKeyConstraint constraintName="tag_item_owner_fk" baseTableName="tag_item" baseColumnNames="owner"  referencedTableName="users"
                                  referencedColumnNames="user_id" />
     </changeSet> -->
-    <changeSet id="openmrs-module-tag-2017-06-02-12-21" author="jtatia">
+    <changeSet id="tag-2017-06-02-12-21" author="jtatia">
         <preConditions onFail="MARK_RAN">
-            <not><tableExists tableName="tag"/></not>
+            <not><tableExists tableName="tag_tag"/></not>
         </preConditions>
         <comment>
             Creating the Tag table
         </comment>
-        <createTable tableName="tag">
+        <createTable tableName="tag_tag">
             <column name="tag_id" type="int" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true" nullable="false" unique="true"/>
             </column>
             <column name="tag" type="varchar(50)">
                 <constraints nullable="false"></constraints>
@@ -61,13 +61,16 @@
             <column name="date_created" type="DATETIME">
                 <constraints nullable="false"></constraints>
             </column>
+            <column name="changedBy" type="int"></column>
+            <column name="date_changed" type="DATETIME"></column>
             <column name="uuid" type="char(38)">
                 <constraints nullable="false" unique="true"></constraints>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="tag_owner_fk" baseTableName="tag" baseColumnNames="creator" referencedTableName="users"
+        <addForeignKeyConstraint constraintName="tag_owner_fk" baseTableName="tag_tag" baseColumnNames="creator" referencedTableName="users"
+                                 referencedColumnNames="user_id" />
+        <addForeignKeyConstraint constraintName="tag_changedBy_fk" baseTableName="tag_tag" baseColumnNames="changedBy" referencedTableName="users"
                                  referencedColumnNames="user_id" />
     </changeSet>
-
 
 </databaseChangeLog>

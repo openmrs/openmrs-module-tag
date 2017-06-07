@@ -23,6 +23,7 @@ import org.openmrs.api.impl.TagServiceImpl;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
@@ -33,6 +34,8 @@ import static org.junit.Assert.*;
  * BaseModuleContextSensitiveTest, thus it is run without the in-memory DB and Spring context.
  */
 public class TagServiceTest extends BaseModuleContextSensitiveTest {
+	
+	private static final String TAG_INITIAL_XML = "TagServiceDataset.xml";
 	
 	@InjectMocks
 	TagServiceImpl basicModuleService;
@@ -52,39 +55,23 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	@Test
-	public void saveTag_shouldSetCreatorIfNotSet() {
-		//Given
-		Tag tag = new Tag();
-		
-		when(dao.saveTag(tag)).thenReturn(tag);
-		
-		User user = new User();
-		when(userService.getUser(1)).thenReturn(user);
-		
-		//When
-		basicModuleService.saveTag(tag);
-		
-		//Then
-		assertThat(tag, hasProperty("creator", is(user)));
+	public void getAlltags_shouldFetchAllTags() throws Exception {
+		executeDataSet(TAG_INITIAL_XML);
+		List<Tag> list = Context.getService(TagService.class).getAllTags();
+		assertEquals(3, list.size());
 	}
 	
 	@Test
-	//	@Ignore
-	public void saveTag_shouldPersist() {
-		Tag tag = new Tag();
-		tag.setTag("Initial");
-		tag.setObject_uuid("asndassdwrasndassdwrasndassdwrasndassd");
-		tag.setObject_uuid("Concept");
-		tag.setCreator(userService.getUser(1));
-		Date date = new Date();
-		date.setTime(1112);
-		tag.setDateCreated(date);
-		dao.saveTag(tag);
-		System.out.println(tag);
-		Context.flushSession();
-		Context.clearSession();
-		Tag saveTag = new Tag();
-		saveTag = dao.getTagByUuid("asndassdwrasndassdwrasndassdwrasndassd");
-		System.out.println(tag);
+	public void getTagById_shouldFetchUniqueMatchingTag() throws Exception {
+		executeDataSet(TAG_INITIAL_XML);
+		Tag tag = Context.getService(TagService.class).getTagById(3);
+		assertEquals(tag.getUuid(), "e12c432c-1b9f-343e-b332-f3ef6c88ad3f");
+	}
+	
+	@Test
+	public void getTagByName_shouldFetchListOfMatchingTags() throws Exception {
+		executeDataSet(TAG_INITIAL_XML);
+		List<Tag> tagList = Context.getService(TagService.class).getTagByName("FollowUp");
+		assertEquals(tagList.size(), 1);
 	}
 }

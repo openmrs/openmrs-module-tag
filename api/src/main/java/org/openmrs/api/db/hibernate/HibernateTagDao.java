@@ -11,14 +11,18 @@ package org.openmrs.api.db.hibernate;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.api.db.DAOException;
 import org.openmrs.api.db.TagDAO;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository("tagDAO")
 public class HibernateTagDao implements TagDAO {
@@ -53,5 +57,28 @@ public class HibernateTagDao implements TagDAO {
 	public Tag saveTag(Tag tag) {
 		getSession().saveOrUpdate(tag);
 		return tag;
+	}
+	
+	@Override
+	public void deleteTag(Tag tag) {
+		getSession().delete(tag);
+	}
+	
+	@Override
+	public List<Tag> getAllTags() {
+		return getSession().createCriteria(Tag.class).list();
+	}
+	
+	@Override
+	public Tag getTagById(int id) throws DAOException {
+		Criteria criteria = getSession().createCriteria(Tag.class);
+		criteria.add(Restrictions.eq("id", id));
+		return (Tag) criteria.uniqueResult();
+	}
+	
+	@Override
+	public List<Tag> getTagByName(String tag) throws DAOException {
+		Criteria criteria = getSession().createCriteria(Tag.class);
+		return criteria.add(Restrictions.eq("tag", tag)).list();
 	}
 }

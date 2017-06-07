@@ -19,14 +19,16 @@ import org.openmrs.api.TagService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.TagDAO;
 import org.openmrs.api.db.hibernate.HibernateTagDao;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+@Transactional(readOnly = true)
 public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
-	TagDAO dao;
-	
-	TagService tagService;
+	private TagDAO dao;
 	
 	UserService userService;
 	
@@ -51,10 +53,26 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	
 	@Override
 	public Tag saveTag(Tag tag) throws APIException {
-		if (tag.getCreator() == null) {
-			tag.setCreator(userService.getUser(1));
-		}
-		
 		return dao.saveTag(tag);
+	}
+	
+	@Override
+	public void purgeTag(Tag tag) throws APIException {
+		dao.deleteTag(tag);
+	}
+	
+	@Override
+	public List<Tag> getAllTags() throws APIException {
+		return dao.getAllTags();
+	}
+	
+	@Override
+	public Tag getTagById(int id) throws APIException {
+		return dao.getTagById(id);
+	}
+	
+	@Override
+	public List<Tag> getTagByName(String tag) throws APIException {
+		return dao.getTagByName(tag);
 	}
 }
