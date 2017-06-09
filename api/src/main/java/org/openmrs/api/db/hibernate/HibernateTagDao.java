@@ -14,6 +14,8 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Concept;
+import org.openmrs.api.APIException;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.db.TagDAO;
 import org.openmrs.api.db.hibernate.DbSession;
@@ -80,5 +82,11 @@ public class HibernateTagDao implements TagDAO {
 	public List<Tag> getTagByName(String tag) throws DAOException {
 		Criteria criteria = getSession().createCriteria(Tag.class);
 		return criteria.add(Restrictions.eq("tag", tag)).list();
+	}
+	
+	@Override
+	public Object object_exists(String object_uuid, String object_type) throws APIException, ClassNotFoundException {
+		Criteria criteria = getSession().createCriteria(Class.forName(object_type));
+		return criteria.add(Restrictions.eq("uuid", object_uuid)).uniqueResult();
 	}
 }

@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.openmrs.Encounter;
 import org.openmrs.User;
 import org.openmrs.Tag;
 import org.openmrs.api.context.Context;
@@ -22,6 +23,7 @@ import org.openmrs.api.db.TagDAO;
 import org.openmrs.api.impl.TagServiceImpl;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
+import javax.validation.constraints.AssertTrue;
 import java.util.Date;
 import java.util.List;
 
@@ -73,5 +75,12 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 		executeDataSet(TAG_INITIAL_XML);
 		List<Tag> tagList = Context.getService(TagService.class).getTagByName("FollowUp");
 		assertEquals(tagList.size(), 1);
+	}
+	
+	@Test
+	public void object_existsMethod_shouldreturntrueifobjectexists() throws Exception {
+		boolean object = Context.getService(TagService.class).object_exits("0dde1358-7fcf-4341-a330-f119241a46e8",
+		    "org.openmrs.Concept");
+		assertTrue(object);
 	}
 }

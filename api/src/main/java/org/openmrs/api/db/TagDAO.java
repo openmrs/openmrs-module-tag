@@ -15,6 +15,7 @@
 package org.openmrs.api.db;
 
 import org.openmrs.Tag;
+import org.openmrs.api.APIException;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public interface TagDAO {
 	public List<Tag> getAllTags();
 	
 	/**
-	 * @see org.openmrs.api.TagService#getTagById(int)
+	 * @see org.openmrs.api.TagService#object_exits(String, String)
 	 */
-	
+	public Object object_exists(String object_uuid, String object_type) throws APIException, ClassNotFoundException;
 }

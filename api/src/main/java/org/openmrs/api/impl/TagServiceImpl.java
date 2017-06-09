@@ -12,6 +12,7 @@ package org.openmrs.api.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
+import org.openmrs.OpenmrsObject;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.Tag;
@@ -74,5 +75,51 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	@Override
 	public List<Tag> getTagByName(String tag) throws APIException {
 		return dao.getTagByName(tag);
+	}
+	
+	@Override
+	public boolean object_exits(String object_uuid, String object_type) throws Exception {
+		Object object = dao.object_exists(object_uuid, object_type);
+		System.out.println(object);
+		System.out.println(object_type);
+		if (!object.equals(null))
+			return true;
+		return false;
+	}
+
+	@Override
+	public void addTag(OpenmrsObject openmrsObject, String tag) throws Exception {
+		if(object_exits(openmrsObject.getUuid(),openmrsObject.getClass().toString())) {
+			Tag tag1 = new Tag(tag, openmrsObject.getUuid(), openmrsObject.getClass().toString());
+			//validation method to check if object has already been tagged with this tag
+			saveTag(tag1);
+		}
+		}
+
+	@Override
+	public void addTag(List<OpenmrsObject> list, String tag)throws Exception{
+		while (list.iterator().hasNext()) {
+			OpenmrsObject openmrsObject = list.iterator().next();
+			if (object_exits(openmrsObject.getUuid(), openmrsObject.getClass().toString())) {
+				Tag tag1 = new Tag(tag, openmrsObject.getUuid(), openmrsObject.getClass().toString());
+				//validation method to check if object has already been tagged with this tag
+				saveTag(tag1);
+			}
+		}
+	}
+
+	@Override
+	public void addTag(List<OpenmrsObject> openmrsObjectsList, List<String> tagList) throws Exception {
+		while (openmrsObjectsList.iterator().hasNext()) {
+			OpenmrsObject openmrsObject = openmrsObjectsList.iterator().next();
+			while (tagList.iterator().hasNext()) {
+				String tag = tagList.iterator().next();
+					if (object_exits(openmrsObject.getUuid(), openmrsObject.getClass().toString())) {
+					Tag tag1 = new Tag(tag, openmrsObject.getUuid(), openmrsObject.getClass().toString());
+					//validation method to check if object has already been tagged with this tag
+					saveTag(tag1);
+				}
+			}
+		}
 	}
 }

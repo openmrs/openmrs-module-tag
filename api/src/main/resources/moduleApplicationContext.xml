@@ -46,6 +46,7 @@
     </bean>
 
 
+    <bean id="tagValidator" class="org.openmrs.validator.TagValidator"></bean>
     <!--
         <bean id="tagDAO"
               class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">

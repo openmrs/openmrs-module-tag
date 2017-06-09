@@ -18,4 +18,6 @@ import org.springframework.stereotype.Component;
 public class TagConstants {
 	
 	public final static String MODULE_PRIVILEGE = "Tag Privilege";
+
+	public final static String MANAGE_TAGS = "Manage Tags";
 }

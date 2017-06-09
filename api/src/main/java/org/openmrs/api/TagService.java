@@ -9,6 +9,7 @@
  */
 package org.openmrs.api;
 
+import org.openmrs.OpenmrsObject;
 import org.openmrs.TagConstants;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
@@ -33,7 +34,7 @@ public interface TagService extends OpenmrsService {
 	 * @return
 	 * @throws APIException
 	 */
-	@Authorized()
+	@Authorized(TagConstants.MANAGE_TAGS)
 	@Transactional(readOnly = true)
 	Tag getTagByUuid(String uuid) throws APIException;
 	
@@ -83,4 +84,29 @@ public interface TagService extends OpenmrsService {
 	@Transactional(readOnly = true)
 	public List<Tag> getAllTags() throws APIException;
 	
+	/**
+	 * @param object_uuid
+	 * @param object_type
+	 * @return
+	 * @throws APIException
+	 */
+	public boolean object_exits(String object_uuid, String object_type) throws Exception;
+
+	/**
+	 *
+	 * @param openmrsObject
+	 * @param tag
+	 * @throws Exception
+	 */
+	public void addTag(OpenmrsObject openmrsObject, String tag) throws Exception;
+
+	/**
+	 *
+	 * @param openmrsObject
+	 * @param tag
+	 * @throws Exception
+	 */
+	public void addTag(List<OpenmrsObject> openmrsObject,String tag) throws Exception;
+
+	public void addTag(List<OpenmrsObject> openmrsObjectsList,List<String> tagList ) throws Exception;
 }

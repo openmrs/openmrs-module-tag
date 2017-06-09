@@ -39,11 +39,16 @@
 		<point>org.openmrs.admin.list</point>
 		<class>org.openmrs.module.tag.extension.html.AdminList</class>
 	</extension>
-
+<!--
 	<aware_of_modules>
 		<aware_of_module>org.openmrs.module.legacyui</aware_of_module>
 	</aware_of_modules>
+-->
 
+	<privilege>
+		<name>Manage Tags</name>
+		<description>Allows users to add,edit,view and remove tags from an object</description>
+	</privilege>
 
 	<!-- AOP
 	<advice>
