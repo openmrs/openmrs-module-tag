@@ -27,7 +27,7 @@ public class Tag extends BaseOpenmrsData implements Serializable {
 	private String object_uuid;
 	
 	private String object_type;
-
+	
 	private User creator;
 	
 	private Date dateCreated;
@@ -37,15 +37,16 @@ public class Tag extends BaseOpenmrsData implements Serializable {
 	private Date date_changed;
 	
 	private String Uuid = UUID.randomUUID().toString();
-
-	public Tag(){}
-
+	
+	public Tag() {
+	}
+	
 	public Tag(String tag, String object_uuid, String object_type) {
 		this.tag = tag;
 		this.object_uuid = object_uuid;
 		this.object_type = object_type;
 	}
-
+	
 	@Override
 	public Integer getId() {
 		return id;
@@ -125,4 +126,5 @@ public class Tag extends BaseOpenmrsData implements Serializable {
 	public void setUuid(String uuid) {
 		Uuid = uuid;
 	}
+	
 }

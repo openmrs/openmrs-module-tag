@@ -47,27 +47,6 @@
 
 
     <bean id="tagValidator" class="org.openmrs.validator.TagValidator"></bean>
-    <!--
-        <bean id="tagDAO"
-              class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-            <property name="transactionManager">
-                <ref bean="transactionManager"/>
-            </property>
-            <property name="target">
-                <bean class="org.openmrs.api.db.hibernate.HibernateTagDao">
-                    <property name="sessionFactory">
-                        <ref bean="dbSessionFactory"/>
-                    </property>
-                </bean>
-            </property>
-            <property name="preInterceptors">
-                <ref bean="serviceInterceptors"/>
-            </property>
-            <property name="transactionAttributeSource">
-                <ref bean="transactionAttributeSource"/>
-            </property>
-        </bean>
-    -->
     <!-- Adds TagService to OpenMRS context so it can be accessed
     calling Context.getService(TagService.class) -->
     <bean parent="serviceContext">

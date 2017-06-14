@@ -46,7 +46,7 @@ public interface TagService extends OpenmrsService {
 	 * @return
 	 * @throws APIException
 	 */
-	@Authorized(TagConstants.MODULE_PRIVILEGE)
+	@Authorized(TagConstants.MANAGE_TAGS)
 	@Transactional
 	Tag saveTag(Tag tag) throws APIException;
 	
@@ -57,23 +57,26 @@ public interface TagService extends OpenmrsService {
 	 * @throws APIException
 	 * @should delete tag from the database
 	 */
-	@Authorized(TagConstants.MODULE_PRIVILEGE)
-	public void purgeTag(Tag tag) throws APIException;
+	@Authorized(TagConstants.MANAGE_TAGS)
+	void removeTag(Tag tag) throws APIException;
 	
 	/**
 	 * @param id
 	 * @return
 	 * @throws APIException
 	 */
+	@Authorized(TagConstants.MANAGE_TAGS)
 	@Transactional(readOnly = true)
-	public Tag getTagById(int id) throws APIException;
+	Tag getTagById(int id) throws APIException;
 	
 	/**
 	 * @param tag
 	 * @return
 	 * @throws APIException
 	 */
-	public List<Tag> getTagByName(String tag) throws APIException;
+	@Authorized(TagConstants.MANAGE_TAGS)
+	@Transactional(readOnly = true)
+	List<Tag> getTagByName(String tag) throws APIException;
 	
 	/**
 	 * Returns a list of All Tags.
@@ -81,8 +84,9 @@ public interface TagService extends OpenmrsService {
 	 * @return
 	 * @throws APIException
 	 */
+	@Authorized(TagConstants.MANAGE_TAGS)
 	@Transactional(readOnly = true)
-	public List<Tag> getAllTags() throws APIException;
+	List<Tag> getAllTags() throws APIException;
 	
 	/**
 	 * @param object_uuid
@@ -90,23 +94,32 @@ public interface TagService extends OpenmrsService {
 	 * @return
 	 * @throws APIException
 	 */
-	public boolean object_exits(String object_uuid, String object_type) throws Exception;
-
+	boolean object_exits(String object_uuid, String object_type) throws Exception;
+	
 	/**
-	 *
 	 * @param openmrsObject
 	 * @param tag
 	 * @throws Exception
 	 */
-	public void addTag(OpenmrsObject openmrsObject, String tag) throws Exception;
-
+	@Authorized(TagConstants.MANAGE_TAGS)
+	void addTag(OpenmrsObject openmrsObject, String tag) throws Exception;
+	
 	/**
-	 *
 	 * @param openmrsObject
-	 * @param tag
+	 * @return
 	 * @throws Exception
 	 */
-	public void addTag(List<OpenmrsObject> openmrsObject,String tag) throws Exception;
-
-	public void addTag(List<OpenmrsObject> openmrsObjectsList,List<String> tagList ) throws Exception;
+	@Authorized(TagConstants.MANAGE_TAGS)
+	@Transactional(readOnly = true)
+	List<Tag> getTags(OpenmrsObject openmrsObject) throws Exception;
+	
+	/**
+	 * @param object_types
+	 * @param tags
+	 * @param matchAllTags
+	 * @return
+	 */
+	@Authorized(TagConstants.MANAGE_TAGS)
+	@Transactional(readOnly = true)
+	List<Tag> getTags(List<String> object_types, List<String> tags, boolean matchAllTags) throws Exception;
 }

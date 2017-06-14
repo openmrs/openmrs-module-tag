@@ -12,29 +12,6 @@
         See http://www.liquibase.org/manual/home#available_database_refactorings
         for a list of supported elements and attributes
     -->
- 
- 	<!-- Uncomment the changeset below if you want to make the Item class persistable, see also Item and TagDaoTest -->
- 	<!--
-	<changeSet id="tag-2016-08-02-12-21" author="raff">
-		<preConditions onFail="MARK_RAN">
-			<not><tableExists tableName="tag_item"/></not>
-		</preConditions>
-		<comment>
-			Creating the tag_item table
-		</comment>
-		<createTable tableName="tag_item">
-			<column name="tag_item_id" type="int" autoIncrement="true">
-				<constraints primaryKey="true" nullable="false"/>
-			</column>
-			<column name="uuid" type="char(38)">
-				<constraints nullable="false" unique="true"></constraints>
-			</column>
-			<column name="owner" type="int" />
-			<column name="description" type="varchar(255)" />
-		</createTable>
-        <addForeignKeyConstraint constraintName="tag_item_owner_fk" baseTableName="tag_item" baseColumnNames="owner"  referencedTableName="users"
-                                 referencedColumnNames="user_id" />
-    </changeSet> -->
     <changeSet id="tag-2017-06-02-12-21" author="jtatia">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="tag_tag"/></not>
@@ -73,4 +50,14 @@
                                  referencedColumnNames="user_id" />
     </changeSet>
 
+    <changeSet id="tag-2017-06-10-10-11" author="jtatia">
+        <createIndex tableName="tag_tag" indexName="tag_name" unique="false">
+            <column name="tag"></column>
+        </createIndex>
+    </changeSet>
+    <changeSet id="tag-2017-06-10-10-11" author="jtatia">
+        <createIndex tableName="tag_tag" indexName="object_type">
+            <column name="object_type"></column>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

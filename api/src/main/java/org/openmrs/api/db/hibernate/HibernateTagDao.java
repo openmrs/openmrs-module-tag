@@ -11,10 +11,15 @@ package org.openmrs.api.db.hibernate;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.regexp.RE;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.LogicalExpression;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
+import org.openmrs.OpenmrsObject;
 import org.openmrs.api.APIException;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.db.TagDAO;
@@ -85,8 +90,29 @@ public class HibernateTagDao implements TagDAO {
 	}
 	
 	@Override
+	public List<Tag> getTags(OpenmrsObject openmrsObject) throws DAOException {
+		Criteria criteria = getSession().createCriteria(Tag.class);
+		return criteria.add(
+		    Restrictions.and(Restrictions.eq("object_type", openmrsObject.getClass().toString().substring(6)),
+		        Restrictions.eq("object_uuid", openmrsObject.getUuid()))).list();
+	}
+	
+	@Override
 	public Object object_exists(String object_uuid, String object_type) throws APIException, ClassNotFoundException {
 		Criteria criteria = getSession().createCriteria(Class.forName(object_type));
 		return criteria.add(Restrictions.eq("uuid", object_uuid)).uniqueResult();
+	}
+	
+	@Override
+	public List<Tag> getTags(List<String> object_types, List<String> tags) throws DAOException, ClassNotFoundException {
+		Criteria criteria = getSession().createCriteria(Tag.class);
+		return criteria.add(Restrictions.and(Restrictions.in("object_type", object_types), Restrictions.in("tag", tags)))
+		        .list();
+	}
+	
+	@Override
+	public List<Tag> getTags(String object_type, String tag) throws Exception {
+		Criteria criteria = getSession().createCriteria(Tag.class);
+		return criteria.add(Restrictions.eq("object_type", object_type)).add(Restrictions.eq("tag", tag)).list();
 	}
 }

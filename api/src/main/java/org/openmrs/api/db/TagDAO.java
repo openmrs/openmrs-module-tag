@@ -14,6 +14,7 @@
 
 package org.openmrs.api.db;
 
+import org.openmrs.OpenmrsObject;
 import org.openmrs.Tag;
 import org.openmrs.api.APIException;
 
@@ -37,9 +38,13 @@ public interface TagDAO {
 	public List<Tag> getTagByName(String tag) throws DAOException;
 	
 	/**
+	 * @see org.openmrs.api.TagService#getTags(OpenmrsObject)
+	 */
+	public List<Tag> getTags(OpenmrsObject openmrsObject) throws DAOException;
+	
+	/**
 	 * @see org.openmrs.api.TagService#saveTag(Tag)
 	 */
-	
 	public Tag saveTag(Tag tag) throws DAOException;
 	
 	/**
@@ -53,7 +58,20 @@ public interface TagDAO {
 	public List<Tag> getAllTags();
 	
 	/**
+	 * @param object_type
+	 * @param tag
+	 * @return
+	 */
+	List<Tag> getTags(String object_type, String tag) throws Exception;
+	
+	/**
+	 * @see org.openmrs.api.TagService#getTags(List, List, boolean)
+	 */
+	public List<Tag> getTags(List<String> object_type, List<String> tags) throws DAOException, ClassNotFoundException;
+	
+	/**
 	 * @see org.openmrs.api.TagService#object_exits(String, String)
 	 */
 	public Object object_exists(String object_uuid, String object_type) throws APIException, ClassNotFoundException;
+	
 }

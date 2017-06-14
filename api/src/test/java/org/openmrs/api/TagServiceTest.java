@@ -9,9 +9,11 @@
  */
 package org.openmrs.api;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -24,7 +26,9 @@ import org.openmrs.api.impl.TagServiceImpl;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 import javax.validation.constraints.AssertTrue;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -60,7 +64,7 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 	public void getAlltags_shouldFetchAllTags() throws Exception {
 		executeDataSet(TAG_INITIAL_XML);
 		List<Tag> list = Context.getService(TagService.class).getAllTags();
-		assertEquals(3, list.size());
+		assertEquals(12, list.size());
 	}
 	
 	@Test
@@ -74,7 +78,7 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 	public void getTagByName_shouldFetchListOfMatchingTags() throws Exception {
 		executeDataSet(TAG_INITIAL_XML);
 		List<Tag> tagList = Context.getService(TagService.class).getTagByName("FollowUp");
-		assertEquals(tagList.size(), 1);
+		assertEquals(tagList.size(), 4);
 	}
 	
 	@Test
@@ -82,5 +86,27 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 		boolean object = Context.getService(TagService.class).object_exits("0dde1358-7fcf-4341-a330-f119241a46e8",
 		    "org.openmrs.Concept");
 		assertTrue(object);
+	}
+	
+	/*
+	@Test
+	public void addTagWithoutTagName_shouldthrowError(){
+		Tag tag = null;
+		Context.getService(TagService.class).saveTag(tag);
+		ExpectedException expectedException = ExpectedException.none();
+		expectedException.expect(IllegalArgumentException.class);
+	}
+	*/
+	
+	@Test
+	public void testing_getTags() throws Exception {
+		executeDataSet(TAG_INITIAL_XML);
+		List<String> types = new ArrayList<String>();
+		types.add("org.openmrs.Encounter");
+		List<String> tags = new ArrayList<String>();
+		tags.add("Initial");
+		tags.add("FollowUp");
+		List<Tag> tagList = Context.getService(TagService.class).getTags(types, tags, true);
+		assertEquals(tagList.size(), 4);
 	}
 }
