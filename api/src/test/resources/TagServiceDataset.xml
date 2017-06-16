@@ -23,5 +23,7 @@
              date_created="2017-06-12 14:09:05.0" uuid="5349a456-296a-2331-9c83-a3714b82d7ds"/>
     <tag_tag tag_id="12" tag="Large-Orders" object_uuid="921de0a3-05c4-444a-be03-e01b4c4b9142" object_type="org.openmrs.Order" creator="1"
              date_created="2017-06-12 14:09:05.0" uuid="5349a456-296a-2331-9c83-a3714b82d1cv"/>
+    <tag_tag tag_id="13" tag="Newtag" object_uuid="e403fafb-e5e4-42d0-9d11-4f52e89d148c" object_type="org.openmrs.Encounter" creator="1"
+             date_created="2017-06-14 14:10:11.0" uuid="e123ewqw-e5e4-42d0-9d11-4f52e89d121c"></tag_tag>
 
 </dataset>

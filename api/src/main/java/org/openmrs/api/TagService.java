@@ -12,10 +12,8 @@ package org.openmrs.api;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.TagConstants;
 import org.openmrs.annotation.Authorized;
-import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.Tag;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,16 +25,14 @@ import java.util.List;
 public interface TagService extends OpenmrsService {
 	
 	/**
-	 * Returns an item by uuid. It can be called by any authenticated user. It is fetched in read
-	 * only transaction.
+	 * Returns a tag by uuid. It can be called by any authenticated user. It is fetched in read only
+	 * transaction.
 	 * 
 	 * @param uuid
 	 * @return
-	 * @throws APIException
 	 */
 	@Authorized(TagConstants.MANAGE_TAGS)
-	@Transactional(readOnly = true)
-	Tag getTagByUuid(String uuid) throws APIException;
+	public Tag getTagByUuid(String uuid);
 	
 	/**
 	 * Saves an item. Sets the owner to superuser, if it is not set. It can be called by users with
@@ -44,82 +40,82 @@ public interface TagService extends OpenmrsService {
 	 * 
 	 * @param tag
 	 * @return
-	 * @throws APIException
 	 */
 	@Authorized(TagConstants.MANAGE_TAGS)
-	@Transactional
-	Tag saveTag(Tag tag) throws APIException;
+	public Tag saveTag(Tag tag);
 	
 	/**
 	 * Completely delete the tag from the database.
 	 * 
 	 * @param tag The Tag to remove from the system
-	 * @throws APIException
-	 * @should delete tag from the database
 	 */
 	@Authorized(TagConstants.MANAGE_TAGS)
-	void removeTag(Tag tag) throws APIException;
+	public void removeTag(Tag tag);
 	
 	/**
+	 * Returns a tag by id.
+	 * 
 	 * @param id
 	 * @return
-	 * @throws APIException
 	 */
 	@Authorized(TagConstants.MANAGE_TAGS)
-	@Transactional(readOnly = true)
-	Tag getTagById(int id) throws APIException;
+	public Tag getTagById(int id);
 	
 	/**
+	 * Returns a list of tags, by tag(tag name).
+	 * 
 	 * @param tag
 	 * @return
-	 * @throws APIException
 	 */
 	@Authorized(TagConstants.MANAGE_TAGS)
-	@Transactional(readOnly = true)
-	List<Tag> getTagByName(String tag) throws APIException;
+	public List<Tag> getTags(String tag);
 	
 	/**
 	 * Returns a list of All Tags.
 	 * 
 	 * @return
-	 * @throws APIException
 	 */
 	@Authorized(TagConstants.MANAGE_TAGS)
-	@Transactional(readOnly = true)
-	List<Tag> getAllTags() throws APIException;
+	public List<Tag> getAllTags();
 	
 	/**
+	 * Returns true if an object of object_type, and object_uuid exists in the database.
+	 * 
 	 * @param object_uuid
 	 * @param object_type
 	 * @return
-	 * @throws APIException
 	 */
-	boolean object_exits(String object_uuid, String object_type) throws Exception;
+	public boolean object_exits(String object_uuid, String object_type) throws ClassNotFoundException;
 	
 	/**
+	 * It adds a tag to the openmrs object, if such a tag does not already exist on the object.
+	 * 
 	 * @param openmrsObject
 	 * @param tag
 	 * @throws Exception
 	 */
 	@Authorized(TagConstants.MANAGE_TAGS)
-	void addTag(OpenmrsObject openmrsObject, String tag) throws Exception;
+	public Tag addTag(OpenmrsObject openmrsObject, String tag) throws Exception;
 	
 	/**
+	 * It returns a list of tags added to the openmrs object
+	 * 
 	 * @param openmrsObject
 	 * @return
-	 * @throws Exception
 	 */
 	@Authorized(TagConstants.MANAGE_TAGS)
-	@Transactional(readOnly = true)
-	List<Tag> getTags(OpenmrsObject openmrsObject) throws Exception;
+	public List<String> getTags(OpenmrsObject openmrsObject);
 	
 	/**
+	 * It returns a list of Tag objects if an object of object_type is having all tags (if
+	 * matchAllTags = true) or any, one of the tags (if matchAllTags = false)
+	 * 
 	 * @param object_types
 	 * @param tags
 	 * @param matchAllTags
 	 * @return
 	 */
 	@Authorized(TagConstants.MANAGE_TAGS)
-	@Transactional(readOnly = true)
-	List<Tag> getTags(List<String> object_types, List<String> tags, boolean matchAllTags) throws Exception;
+	public List<Tag> getTags(List<String> object_types, List<String> tags, boolean matchAllTags)
+	        throws ClassNotFoundException;
 }

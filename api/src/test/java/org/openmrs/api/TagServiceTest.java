@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Encounter;
-import org.openmrs.User;
+import org.openmrs.Obs;
 import org.openmrs.Tag;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.TagDAO;
@@ -27,8 +27,6 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 import javax.validation.constraints.AssertTrue;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -36,8 +34,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 /**
- * This is a unit test, which verifies logic in TagService. It doesn't extend
- * BaseModuleContextSensitiveTest, thus it is run without the in-memory DB and Spring context.
+ * This is a unit test, which verifies logic in TagService.
  */
 public class TagServiceTest extends BaseModuleContextSensitiveTest {
 	
@@ -64,7 +61,7 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 	public void getAlltags_shouldFetchAllTags() throws Exception {
 		executeDataSet(TAG_INITIAL_XML);
 		List<Tag> list = Context.getService(TagService.class).getAllTags();
-		assertEquals(12, list.size());
+		assertEquals(13, list.size());
 	}
 	
 	@Test
@@ -75,9 +72,9 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	@Test
-	public void getTagByName_shouldFetchListOfMatchingTags() throws Exception {
+	public void getTags_shouldFetchListOfMatchingTags() throws Exception {
 		executeDataSet(TAG_INITIAL_XML);
-		List<Tag> tagList = Context.getService(TagService.class).getTagByName("FollowUp");
+		List<Tag> tagList = Context.getService(TagService.class).getTags("FollowUp");
 		assertEquals(tagList.size(), 4);
 	}
 	
@@ -88,15 +85,13 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 		assertTrue(object);
 	}
 	
-	/*
 	@Test
-	public void addTagWithoutTagName_shouldthrowError(){
-		Tag tag = null;
-		Context.getService(TagService.class).saveTag(tag);
-		ExpectedException expectedException = ExpectedException.none();
-		expectedException.expect(IllegalArgumentException.class);
+	public void getTagsWithObjectParameter_shouldReturnListOfStringTags() throws Exception {
+		executeDataSet(TAG_INITIAL_XML);
+		Encounter encounter = Context.getEncounterService().getEncounterByUuid("e403fafb-e5e4-42d0-9d11-4f52e89d148c");
+		List<String> tags = Context.getService(TagService.class).getTags(encounter);
+		assertEquals(tags.size(), 3);
 	}
-	*/
 	
 	@Test
 	public void testing_getTags() throws Exception {
@@ -108,5 +103,15 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 		tags.add("FollowUp");
 		List<Tag> tagList = Context.getService(TagService.class).getTags(types, tags, true);
 		assertEquals(tagList.size(), 4);
+	}
+	
+	@Test
+	public void addTag_shouldAddTagToObject() throws Exception {
+		executeDataSet(TAG_INITIAL_XML);
+		Obs obs = Context.getObsService().getObsByUuid("2f616900-5e7c-4667-9a7f-dcb260abf1de");
+		Tag tag1 = Context.getService(TagService.class).addTag(obs, "Important");
+		assertEquals(tag1.getTag(), "Important");
+		assertEquals(tag1.getObjectType(), "org.openmrs.Obs");
+		assertEquals(tag1.getObjectUuid(), obs.getUuid());
 	}
 }

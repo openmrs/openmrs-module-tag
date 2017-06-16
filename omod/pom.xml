@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.openmrs</groupId>
 		<artifactId>tag</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>tag-omod</artifactId>
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.openmrs</groupId>
             <artifactId>tag-api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
 			<groupId>org.openmrs.web</groupId>

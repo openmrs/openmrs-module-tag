@@ -12,7 +12,7 @@
         See http://www.liquibase.org/manual/home#available_database_refactorings
         for a list of supported elements and attributes
     -->
-    <changeSet id="tag-2017-06-02-12-21" author="jtatia">
+    <changeSet id="tag-2017-06-02-12-22" author="jtatia">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="tag_tag"/></not>
         </preConditions>
@@ -38,15 +38,11 @@
             <column name="date_created" type="DATETIME">
                 <constraints nullable="false"></constraints>
             </column>
-            <column name="changedBy" type="int"></column>
-            <column name="date_changed" type="DATETIME"></column>
             <column name="uuid" type="char(38)">
                 <constraints nullable="false" unique="true"></constraints>
             </column>
         </createTable>
         <addForeignKeyConstraint constraintName="tag_owner_fk" baseTableName="tag_tag" baseColumnNames="creator" referencedTableName="users"
-                                 referencedColumnNames="user_id" />
-        <addForeignKeyConstraint constraintName="tag_changedBy_fk" baseTableName="tag_tag" baseColumnNames="changedBy" referencedTableName="users"
                                  referencedColumnNames="user_id" />
     </changeSet>
 

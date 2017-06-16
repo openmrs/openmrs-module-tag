@@ -12,15 +12,17 @@ package org.openmrs.api.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.OpenmrsObject;
-import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.Tag;
 import org.openmrs.api.TagService;
-import org.openmrs.api.context.Context;
 import org.openmrs.api.db.TagDAO;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 
 @Transactional(readOnly = true)
 public class TagServiceImpl extends BaseOpenmrsService implements TagService {
@@ -46,37 +48,41 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	}
 	
 	@Override
-	public Tag getTagByUuid(String uuid) throws APIException {
+	@Transactional
+	public Tag getTagByUuid(String uuid) {
 		return dao.getTagByUuid(uuid);
 	}
 	
 	@Override
-	public Tag saveTag(Tag tag) throws APIException {
+	public Tag saveTag(Tag tag) {
 		return dao.saveTag(tag);
 	}
 	
 	@Override
-	public void removeTag(Tag tag) throws APIException {
+	public void removeTag(Tag tag) {
 		dao.deleteTag(tag);
 	}
 	
 	@Override
-	public List<Tag> getAllTags() throws APIException {
+	@Transactional
+	public List<Tag> getAllTags() {
 		return dao.getAllTags();
 	}
 	
 	@Override
-	public Tag getTagById(int id) throws APIException {
+	@Transactional
+	public Tag getTagById(int id) {
 		return dao.getTagById(id);
 	}
 	
 	@Override
-	public List<Tag> getTagByName(String tag) throws APIException {
-		return dao.getTagByName(tag);
+	@Transactional
+	public List<Tag> getTags(String tag) {
+		return dao.getTags(tag);
 	}
 	
 	@Override
-	public boolean object_exits(String object_uuid, String object_type) throws Exception {
+	public boolean object_exits(String object_uuid, String object_type) throws ClassNotFoundException {
 		Object object = dao.object_exists(object_uuid, object_type);
 		if (!object.equals(null))
 			return true;
@@ -84,14 +90,13 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	}
 	
 	@Override
-	public void addTag(OpenmrsObject openmrsObject, String tag) throws Exception {
-		if (object_exits(openmrsObject.getUuid(), openmrsObject.getClass().toString())) {
-			if (duplicateTag(openmrsObject, tag)) {
-				log.warn("duplicate Tag for " + openmrsObject);
-			} else {
-				Tag tag1 = new Tag(tag, openmrsObject.getUuid(), openmrsObject.getClass().toString());
-				saveTag(tag1);
-			}
+	public Tag addTag(OpenmrsObject openmrsObject, String tag) throws Exception {
+		if (duplicateTag(openmrsObject, tag)) {
+			log.warn("duplicate Tag for " + openmrsObject);
+			return null;
+		} else {
+			Tag tag1 = new Tag(tag, openmrsObject.getUuid(), openmrsObject.getClass().toString().substring(6));
+			return saveTag(tag1);
 		}
 	}
 	
@@ -99,10 +104,10 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	 * Validation Method which logs a warning if u try to add a duplicate tag to an OpenmrsObject
 	 */
 	public boolean duplicateTag(OpenmrsObject openmrsObject, String tag) throws Exception {
-		List<Tag> list = getTags(openmrsObject);
-		Iterator<Tag> listIterator = list.iterator();
+		List<String> list = getTags(openmrsObject);
+		Iterator<String> listIterator = list.iterator();
 		while (listIterator.hasNext()) {
-			if (listIterator.next().getTag().equals(tag)) {
+			if (listIterator.next().equals(tag)) {
 				return true;
 			}
 		}
@@ -110,31 +115,26 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	}
 	
 	@Override
-	public List<Tag> getTags(OpenmrsObject openmrsObject) throws Exception {
-		List<Tag> tags = dao.getTags(openmrsObject);
+	@Transactional
+	public List<String> getTags(OpenmrsObject openmrsObject) {
+		List<String> tags = dao.getTags(openmrsObject);
 		return tags;
 	}
 	
 	@Override
-	public List<Tag> getTags(List<String> object_types, List<String> tags, boolean matchAllTags) throws Exception {
+	@Transactional
+	public List<Tag> getTags(List<String> object_types, List<String> tags, boolean matchAllTags)
+	        throws ClassNotFoundException {
 		if (!matchAllTags) {
 			List<Tag> tagList = dao.getTags(object_types, tags);
 			return tagList;
 		} else {
 			List<Tag> finalList = new ArrayList<Tag>();
 			List<Tag> tagList = (dao.getTags(object_types, tags));
-			/**
-			 * JAVA 8 solution. will remove it. //grouping the tags based on object_id Map<String,
-			 * List<Tag>> tagMap = tagList.stream().collect( Collectors.groupingBy(Tag::
-			 * getObject_uuid, Collectors.toList())); tagList.stream().filter(distinctByKey(p ->
-			 * p.getObject_uuid())); while (tagList.iterator().hasNext()){
-			 * if(tagMap.get(tagList.iterator().next().getObject_uuid()).size() == tags.size()){
-			 * finalList.addAll(tagMap.get(tagList.iterator().next())); } } return finalList;
-			 */
 			Map<String, List<Tag>> map = new HashMap<String, List<Tag>>();
 			List<String> uniqueObjects = new ArrayList<String>();
 			for (Tag tag1 : tagList) {
-				String key = tag1.getObject_uuid();
+				String key = tag1.getObjectUuid();
 				if (map.containsKey(key)) {
 					List<Tag> list = map.get(key);
 					list.add(tag1);

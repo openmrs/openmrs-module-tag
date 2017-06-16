@@ -43,10 +43,8 @@ public class TagDaoTest extends BaseModuleContextSensitiveTest {
 		
 		Tag tag = new Tag();
 		tag.setTag("Initial");
-		tag.setObject_uuid("e26c432c-1b9f-666e-b211-f3ef6c88bf6f");
-		tag.setObject_type("Concept");
-		tag.setCreator(userService.getUser(1));
-		tag.setDateCreated(new Date());
+		tag.setObjectUuid("0dde1358-7fcf-4341-a330-f119241a46e8");
+		tag.setObjectType("org.openmrs.Concet");
 		
 		//When
 		tagDao.saveTag(tag);
@@ -60,7 +58,7 @@ public class TagDaoTest extends BaseModuleContextSensitiveTest {
 		assertThat(savedTag, hasProperty("creator", is(tag.getCreator())));
 		assertThat(savedTag, hasProperty("tag", is(tag.getTag())));
 		assertThat(savedTag, hasProperty("id", is(tag.getId())));
-		assertThat(savedTag, hasProperty("object_type", is(tag.getObject_type())));
-		assertThat(savedTag, hasProperty("object_uuid", is(tag.getObject_uuid())));
+		assertThat(savedTag, hasProperty("objectType", is(tag.getObjectType())));
+		assertThat(savedTag, hasProperty("objectUuid", is(tag.getObjectUuid())));
 	}
 }

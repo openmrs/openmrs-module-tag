@@ -45,8 +45,6 @@
         </property>
     </bean>
 
-
-    <bean id="tagValidator" class="org.openmrs.validator.TagValidator"></bean>
     <!-- Adds TagService to OpenMRS context so it can be accessed
     calling Context.getService(TagService.class) -->
     <bean parent="serviceContext">

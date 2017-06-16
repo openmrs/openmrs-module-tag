@@ -33,14 +33,14 @@ public interface TagDAO {
 	public Tag getTagById(int id) throws DAOException;
 	
 	/**
-	 * @see org.openmrs.api.TagService#getTagByName(String)
+	 * @see org.openmrs.api.TagService#getTags(String)
 	 */
-	public List<Tag> getTagByName(String tag) throws DAOException;
+	public List<Tag> getTags(String tag) throws DAOException;
 	
 	/**
 	 * @see org.openmrs.api.TagService#getTags(OpenmrsObject)
 	 */
-	public List<Tag> getTags(OpenmrsObject openmrsObject) throws DAOException;
+	public List<String> getTags(OpenmrsObject openmrsObject) throws DAOException;
 	
 	/**
 	 * @see org.openmrs.api.TagService#saveTag(Tag)
@@ -48,7 +48,7 @@ public interface TagDAO {
 	public Tag saveTag(Tag tag) throws DAOException;
 	
 	/**
-	 * @see org.openmrs.api.TagService#purgeTag(Tag)
+	 * @see org.openmrs.api.TagService#removeTag(Tag)
 	 */
 	public void deleteTag(Tag tag) throws DAOException;
 	
@@ -56,13 +56,6 @@ public interface TagDAO {
 	 * @see org.openmrs.api.TagService#getAllTags()
 	 */
 	public List<Tag> getAllTags();
-	
-	/**
-	 * @param object_type
-	 * @param tag
-	 * @return
-	 */
-	List<Tag> getTags(String object_type, String tag) throws Exception;
 	
 	/**
 	 * @see org.openmrs.api.TagService#getTags(List, List, boolean)

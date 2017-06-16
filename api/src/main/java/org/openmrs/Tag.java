@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * Please note that a corresponding table schema must be created in liquibase.xml.
+ * Please note that a corresponding table schema has been created in liquibase.xml.
  */
 public class Tag extends BaseOpenmrsData implements Serializable {
 	
@@ -24,27 +24,23 @@ public class Tag extends BaseOpenmrsData implements Serializable {
 	
 	private String tag;
 	
-	private String object_uuid;
+	private String objectUuid;
 	
-	private String object_type;
+	private String objectType;
 	
 	private User creator;
 	
 	private Date dateCreated;
-	
-	private User changedBy;
-	
-	private Date date_changed;
 	
 	private String Uuid = UUID.randomUUID().toString();
 	
 	public Tag() {
 	}
 	
-	public Tag(String tag, String object_uuid, String object_type) {
+	public Tag(String tag, String objectUuid, String objectType) {
 		this.tag = tag;
-		this.object_uuid = object_uuid;
-		this.object_type = object_type;
+		this.objectUuid = objectUuid;
+		this.objectType = objectType;
 	}
 	
 	@Override
@@ -65,66 +61,20 @@ public class Tag extends BaseOpenmrsData implements Serializable {
 		this.tag = tag;
 	}
 	
-	public String getObject_uuid() {
-		return object_uuid;
+	public String getObjectUuid() {
+		return objectUuid;
 	}
 	
-	public void setObject_uuid(String object_uuid) {
-		this.object_uuid = object_uuid;
+	public void setObjectUuid(String objectUuid) {
+		this.objectUuid = objectUuid;
 	}
 	
-	public String getObject_type() {
-		return object_type;
+	public String getObjectType() {
+		return objectType;
 	}
 	
-	public void setObject_type(String object_type) {
-		this.object_type = object_type;
-	}
-	
-	public User getCreator() {
-		return creator;
-	}
-	
-	public void setCreator(User creator) {
-		this.creator = creator;
-	}
-	
-	@Override
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-	
-	@Override
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-	
-	@Override
-	public User getChangedBy() {
-		return changedBy;
-	}
-	
-	@Override
-	public void setChangedBy(User changedBy) {
-		this.changedBy = changedBy;
-	}
-	
-	public Date getDate_changed() {
-		return date_changed;
-	}
-	
-	public void setDate_changed(Date date_changed) {
-		this.date_changed = date_changed;
-	}
-	
-	@Override
-	public String getUuid() {
-		return Uuid;
-	}
-	
-	@Override
-	public void setUuid(String uuid) {
-		Uuid = uuid;
+	public void setObjectType(String objectType) {
+		this.objectType = objectType;
 	}
 	
 }
