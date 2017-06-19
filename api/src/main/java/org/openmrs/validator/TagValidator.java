@@ -42,7 +42,10 @@ public class TagValidator implements Validator {
 		ValidationUtils.rejectIfEmpty(errors, "objectType", "Tag.object_type.empty");
 		
 		try {
-			if (!Context.getService(TagService.class).object_exits(tagInstance.getObjectUuid(), tagInstance.getObjectType()))
+			if (!Context
+			        .getService(TagService.class)
+			        .getObject(Context.getService(TagService.class).toClass(tagInstance.getObjectType()).getClass(),
+			            tagInstance.getObjectUuid()).equals(null))
 				errors.reject("Object type = " + tagInstance.getObjectType() + " with uuid= " + tagInstance.getObjectUuid()
 				        + "does not exist");
 		}

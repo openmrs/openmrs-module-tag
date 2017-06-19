@@ -14,12 +14,17 @@ import org.openmrs.TagConstants;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.Tag;
+import org.openmrs.api.context.Context;
 
 import java.util.List;
 
 /**
- * The main service of this module, which is exposed for other modules. See
- * moduleApplicationContext.xml on how it is wired up.
+ * Contains services for adding/removing/obtaining Tags. Example Usage: <br>
+ * <code>
+ *   List&lt;Tag&gt; tags = Context.getService(TagService.class).getAllTags();
+ * </code>
+ * 
+ * @see org.openmrs.Tag
  */
 
 public interface TagService extends OpenmrsService {
@@ -29,20 +34,20 @@ public interface TagService extends OpenmrsService {
 	 * transaction.
 	 * 
 	 * @param uuid
-	 * @return
+	 * @return tag or null
 	 */
-	@Authorized(TagConstants.MANAGE_TAGS)
-	public Tag getTagByUuid(String uuid);
+	@Authorized(TagConstants.GET_TAGS)
+	Tag getTagByUuid(String uuid);
 	
 	/**
-	 * Saves an item. Sets the owner to superuser, if it is not set. It can be called by users with
-	 * this module's privilege. It is executed in a transaction.
+	 * Saves a tag. Sets the owner to superuser, if it is not set. It can be called by users with
+	 * this module's privilege. It is executed in a transaction. Tags can only be added, not edited.
 	 * 
 	 * @param tag
-	 * @return
+	 * @return Tag that has been saved
 	 */
 	@Authorized(TagConstants.MANAGE_TAGS)
-	public Tag saveTag(Tag tag);
+	Tag saveTag(Tag tag);
 	
 	/**
 	 * Completely delete the tag from the database.
@@ -50,72 +55,102 @@ public interface TagService extends OpenmrsService {
 	 * @param tag The Tag to remove from the system
 	 */
 	@Authorized(TagConstants.MANAGE_TAGS)
-	public void removeTag(Tag tag);
+	void deleteTag(Tag tag);
+	
+	/**
+	 * Removes a tag(if exists) from an OpenmrsObject.
+	 * 
+	 * @param openmrsObject the openmrsObject from which the tags is to be removed
+	 * @param tag the textual tag to be removed
+	 */
+	@Authorized(TagConstants.MANAGE_TAGS)
+	void removeTag(OpenmrsObject openmrsObject, String tag);
 	
 	/**
 	 * Returns a tag by id.
 	 * 
-	 * @param id
-	 * @return
+	 * @param tagId the id of the Tag Object to be retrieved
+	 * @return Tag with given internal identifier
 	 */
-	@Authorized(TagConstants.MANAGE_TAGS)
-	public Tag getTagById(int id);
+	@Authorized(TagConstants.GET_TAGS)
+	Tag getTag(Integer tagId);
 	
 	/**
-	 * Returns a list of tags, by tag(tag name).
+	 * Returns a list of Tag objects having the given tag, or having tags containing the substring.
+	 * Partial Search supported
 	 * 
-	 * @param tag
-	 * @return
+	 * @param tag the tag (String) which the
+	 * @return List of Tag Objects
 	 */
-	@Authorized(TagConstants.MANAGE_TAGS)
-	public List<Tag> getTags(String tag);
+	@Authorized(TagConstants.GET_TAGS)
+	List<Tag> getTags(String tag);
 	
 	/**
 	 * Returns a list of All Tags.
 	 * 
-	 * @return
+	 * @return list Of Tags (String)
 	 */
-	@Authorized(TagConstants.MANAGE_TAGS)
-	public List<Tag> getAllTags();
+	@Authorized(TagConstants.GET_TAGS)
+	List<String> getAllTags();
 	
 	/**
-	 * Returns true if an object of object_type, and object_uuid exists in the database.
+	 * Retrieves an Object with given object uuid and object type from the Openmrs database.
 	 * 
-	 * @param object_uuid
-	 * @param object_type
+	 * @param objectUuid the UUID of the object
+	 * @param objectType the java class of the object (eg. Concept.class)
 	 * @return
 	 */
-	public boolean object_exits(String object_uuid, String object_type) throws ClassNotFoundException;
+	<T extends OpenmrsObject> T getObject(Class<T> objectType, String objectUuid);
 	
 	/**
-	 * It adds a tag to the openmrs object, if such a tag does not already exist on the object.
+	 * It adds a tag to the openmrs object, if such a tag does not already exist on the object. A
+	 * warning will be logged if the object does not exist in the database
 	 * 
-	 * @param openmrsObject
-	 * @param tag
-	 * @throws Exception
+	 * @param openmrsObject the object to which the tag has to be added
+	 * @param tag the tag (string) which is to be added
 	 */
-	@Authorized(TagConstants.MANAGE_TAGS)
-	public Tag addTag(OpenmrsObject openmrsObject, String tag) throws Exception;
+	@Authorized(TagConstants.GET_TAGS)
+	Tag addTag(OpenmrsObject openmrsObject, String tag);
 	
 	/**
 	 * It returns a list of tags added to the openmrs object
 	 * 
-	 * @param openmrsObject
-	 * @return
+	 * @param openmrsObject the object whose tags needs to obtained
+	 * @return a List of Tag Objects having the same object type and uuid as the Openmrs Object
+	 *         parameter
 	 */
-	@Authorized(TagConstants.MANAGE_TAGS)
-	public List<String> getTags(OpenmrsObject openmrsObject);
+	@Authorized(TagConstants.GET_TAGS)
+	List<Tag> getTags(OpenmrsObject openmrsObject);
 	
 	/**
-	 * It returns a list of Tag objects if an object of object_type is having all tags (if
-	 * matchAllTags = true) or any, one of the tags (if matchAllTags = false)
+	 * returns a List of Tag Objects which have an Object Type that belongs to the objectTypes
+	 * parameter and a tag which belongs to the tags (List<String>) parameter. returns a list of Tag
+	 * Objects which have a tag belonging to the List, if objectTypes list is empty. Throws an API
+	 * Exception if tags list is empty.
 	 * 
-	 * @param object_types
-	 * @param tags
-	 * @param matchAllTags
-	 * @return
+	 * @param objectTypes a list of object types (objectTypes should be the Java Class Name)
+	 * @param tags a list of tags
+	 * @return a list of tag objects which have an object_type and a tag from the parameters
 	 */
-	@Authorized(TagConstants.MANAGE_TAGS)
-	public List<Tag> getTags(List<String> object_types, List<String> tags, boolean matchAllTags)
-	        throws ClassNotFoundException;
+	@Authorized(TagConstants.GET_TAGS)
+	List<Tag> getTags(List<String> objectTypes, List<String> tags);
+	
+	/**
+	 * returns a list of OpenMrs Objects which have an objectType from the parameters, and have all
+	 * the tags.
+	 * 
+	 * @param objectTypes the permissible object_types to be searched against
+	 * @param tags the list of tags that all objects should have
+	 * @return a list of Openmrs Objects
+	 */
+	List<OpenmrsObject> getObjectsWithAllTags(List<String> objectTypes, List<String> tags);
+	
+	/**
+	 * Obtains the java class from a String.
+	 * 
+	 * @param className the string java class name (ex. org.openmrs.Concept)
+	 * @param <T>
+	 * @return the OpenmrsObject class
+	 */
+	public <T extends OpenmrsObject> T toClass(String className);
 }

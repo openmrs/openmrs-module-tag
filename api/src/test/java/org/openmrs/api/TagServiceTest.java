@@ -19,11 +19,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
+import org.openmrs.OpenmrsObject;
 import org.openmrs.Tag;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.TagDAO;
 import org.openmrs.api.impl.TagServiceImpl;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import sun.reflect.annotation.ExceptionProxy;
 
 import javax.validation.constraints.AssertTrue;
 import java.util.ArrayList;
@@ -60,14 +62,14 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void getAlltags_shouldFetchAllTags() throws Exception {
 		executeDataSet(TAG_INITIAL_XML);
-		List<Tag> list = Context.getService(TagService.class).getAllTags();
+		List<String> list = Context.getService(TagService.class).getAllTags();
 		assertEquals(13, list.size());
 	}
 	
 	@Test
-	public void getTagById_shouldFetchUniqueMatchingTag() throws Exception {
+	public void getTag_shouldFetchUniqueMatchingTag() throws Exception {
 		executeDataSet(TAG_INITIAL_XML);
-		Tag tag = Context.getService(TagService.class).getTagById(3);
+		Tag tag = Context.getService(TagService.class).getTag(3);
 		assertEquals(tag.getUuid(), "e12c432c-1b9f-343e-b332-f3ef6c88ad3f");
 	}
 	
@@ -79,30 +81,46 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	@Test
-	public void object_existsMethod_shouldreturntrueifobjectexists() throws Exception {
-		boolean object = Context.getService(TagService.class).object_exits("0dde1358-7fcf-4341-a330-f119241a46e8",
-		    "org.openmrs.Concept");
-		assertTrue(object);
+	public void object_existsMethod_shouldReturnTrueIfObjectExists() throws Exception {
+		OpenmrsObject object = Context.getService(TagService.class).getObject(Encounter.class,
+		    "e403fafb-e5e4-42d0-9d11-4f52e89d148c");
+		Encounter encounter = Context.getEncounterService().getEncounterByUuid("e403fafb-e5e4-42d0-9d11-4f52e89d148c");
+		assertEquals(object, encounter);
 	}
 	
 	@Test
 	public void getTagsWithObjectParameter_shouldReturnListOfStringTags() throws Exception {
 		executeDataSet(TAG_INITIAL_XML);
 		Encounter encounter = Context.getEncounterService().getEncounterByUuid("e403fafb-e5e4-42d0-9d11-4f52e89d148c");
-		List<String> tags = Context.getService(TagService.class).getTags(encounter);
+		List<Tag> tags = Context.getService(TagService.class).getTags(encounter);
 		assertEquals(tags.size(), 3);
 	}
 	
 	@Test
-	public void testing_getTags() throws Exception {
+	public void getObjectsWithAllTags_shouldReturnOpenmrsObjectsWhichHaveAllTags() throws Exception {
 		executeDataSet(TAG_INITIAL_XML);
 		List<String> types = new ArrayList<String>();
 		types.add("org.openmrs.Encounter");
+		types.add("org.openmrs.Obs");
 		List<String> tags = new ArrayList<String>();
 		tags.add("Initial");
 		tags.add("FollowUp");
-		List<Tag> tagList = Context.getService(TagService.class).getTags(types, tags, true);
-		assertEquals(tagList.size(), 4);
+		List<OpenmrsObject> tagList = Context.getService(TagService.class).getObjectsWithAllTags(types, tags);
+		assertEquals(tagList.size(), 3);
+	}
+	
+	@Test
+	public void getTags_shouldReturnTagsWhichMatchParameterCriteria() throws Exception {
+		executeDataSet(TAG_INITIAL_XML);
+		List<String> types = new ArrayList<String>();
+		types.add("org.openmrs.Obs");
+		types.add("org.openmrs.Order");
+		List<String> tags = new ArrayList<String>();
+		tags.add("Initial");
+		tags.add("FollowUp");
+		List<Tag> tagList = Context.getService(TagService.class).getTags(types, tags);
+		assertEquals(tagList.size(), 3);
+		
 	}
 	
 	@Test
@@ -113,5 +131,15 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 		assertEquals(tag1.getTag(), "Important");
 		assertEquals(tag1.getObjectType(), "org.openmrs.Obs");
 		assertEquals(tag1.getObjectUuid(), obs.getUuid());
+	}
+	
+	@Test
+	public void removeTag_shouldRemoveTagFromObject() throws Exception {
+		executeDataSet(TAG_INITIAL_XML);
+		Tag tag = Context.getService(TagService.class).getTag(1);
+		OpenmrsObject object = Context.getService(TagService.class).getObject(
+		    Context.getService(TagService.class).toClass(tag.getObjectType()).getClass(), tag.getObjectUuid());
+		Context.getService(TagService.class).removeTag(object, tag.getTag());
+		assertNull(Context.getService(TagService.class).getTag(1));
 	}
 }

@@ -52,6 +52,10 @@
 		<name>Manage Tags</name>
 		<description>Allows users to add,edit,view and remove tags from an object</description>
 	</privilege>
+	<privilege>
+		<name>Get Tags</name>
+		<description>Allows users to view tags</description>
+	</privilege>
 
 	<!-- AOP
 	<advice>

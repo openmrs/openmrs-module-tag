@@ -25,46 +25,50 @@ public interface TagDAO {
 	/**
 	 * @see org.openmrs.api.TagService#getTagByUuid(String)
 	 */
-	public Tag getTagByUuid(String uuid) throws DAOException;
+	Tag getTagByUuid(String uuid);
 	
 	/**
-	 * @see org.openmrs.api.TagService#getTagById(int)
+	 * @see org.openmrs.api.TagService#getTag(Integer)
 	 */
-	public Tag getTagById(int id) throws DAOException;
+	Tag getTag(Integer id);
 	
 	/**
 	 * @see org.openmrs.api.TagService#getTags(String)
 	 */
-	public List<Tag> getTags(String tag) throws DAOException;
+	List<Tag> getTags(String tag);
 	
 	/**
 	 * @see org.openmrs.api.TagService#getTags(OpenmrsObject)
 	 */
-	public List<String> getTags(OpenmrsObject openmrsObject) throws DAOException;
+	List<Tag> getTags(OpenmrsObject openmrsObject);
 	
 	/**
 	 * @see org.openmrs.api.TagService#saveTag(Tag)
 	 */
-	public Tag saveTag(Tag tag) throws DAOException;
+	Tag saveTag(Tag tag);
 	
 	/**
-	 * @see org.openmrs.api.TagService#removeTag(Tag)
+	 * @see org.openmrs.api.TagService#deleteTag(Tag)
 	 */
-	public void deleteTag(Tag tag) throws DAOException;
+	void deleteTag(Tag tag);
 	
 	/**
 	 * @see org.openmrs.api.TagService#getAllTags()
 	 */
-	public List<Tag> getAllTags();
+	List<String> getAllTags();
 	
 	/**
-	 * @see org.openmrs.api.TagService#getTags(List, List, boolean)
+	 * @see org.openmrs.api.TagService#getTags(List, List)
 	 */
-	public List<Tag> getTags(List<String> object_type, List<String> tags) throws DAOException, ClassNotFoundException;
+	List<Tag> getTags(List<String> objectType, List<String> tags);
 	
 	/**
-	 * @see org.openmrs.api.TagService#object_exits(String, String)
+	 * @see org.openmrs.api.TagService#getObject(Class, String)
 	 */
-	public Object object_exists(String object_uuid, String object_type) throws APIException, ClassNotFoundException;
+	Object getObject(String objectUuid, String objectType);
 	
+	/**
+	 * @see org.openmrs.api.TagService#removeTag(OpenmrsObject, String)
+	 */
+	Tag getTag(OpenmrsObject openmrsObject, String tag);
 }

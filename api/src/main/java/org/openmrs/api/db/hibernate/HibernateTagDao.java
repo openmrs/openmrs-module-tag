@@ -15,9 +15,12 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.api.APIException;
+import org.openmrs.api.TagService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.db.TagDAO;
 import org.openmrs.Tag;
+import org.openmrs.util.OpenmrsClassLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -31,20 +34,6 @@ public class HibernateTagDao implements TagDAO {
 	
 	@Autowired
 	private DbSessionFactory sessionFactory;
-	
-	/**
-	 * @param sessionFactory the sessionFactory to set
-	 */
-	public void setSessionFactory(DbSessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-	
-	/**
-	 * @return the sessionFactory
-	 */
-	public DbSessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
 	
 	private DbSession getSession() {
 		return sessionFactory.getCurrentSession();
@@ -65,39 +54,57 @@ public class HibernateTagDao implements TagDAO {
 	}
 	
 	@Override
-	public List<Tag> getAllTags() {
-		return getSession().createCriteria(Tag.class).list();
+	public List<String> getAllTags() {
+		return getSession().createCriteria(Tag.class).setProjection(Projections.property("tag")).list();
 	}
 	
 	@Override
-	public Tag getTagById(int id) throws DAOException {
+	public Tag getTag(Integer id) {
 		return (Tag) getSession().get(Tag.class, id);
 	}
 	
 	@Override
-	public List<Tag> getTags(String tag) throws DAOException {
+	public List<Tag> getTags(String tag) {
 		Criteria criteria = getSession().createCriteria(Tag.class);
 		return criteria.add(Restrictions.like("tag", tag, MatchMode.ANYWHERE)).list();
 	}
 	
 	@Override
-	public List<String> getTags(OpenmrsObject openmrsObject) throws DAOException {
-		Criteria criteria = getSession().createCriteria(Tag.class).setProjection(Projections.property("tag"));
-		criteria.add(Restrictions.eq("objectType", openmrsObject.getClass().toString().substring(6)));
-		criteria.add(Restrictions.eq("objectUuid", (openmrsObject.getUuid())));
-		return (List<String>) criteria.list();
-	}
-	
-	@Override
-	public Object object_exists(String object_uuid, String object_type) throws APIException, ClassNotFoundException {
-		Criteria criteria = getSession().createCriteria(Class.forName(object_type));
-		return criteria.add(Restrictions.eq("uuid", object_uuid)).uniqueResult();
-	}
-	
-	@Override
-	public List<Tag> getTags(List<String> object_types, List<String> tags) throws DAOException, ClassNotFoundException {
+	public List<Tag> getTags(OpenmrsObject openmrsObject) {
 		Criteria criteria = getSession().createCriteria(Tag.class);
-		return criteria.add(Restrictions.and(Restrictions.in("objectType", object_types), Restrictions.in("tag", tags)))
-		        .list();
+		criteria.add(Restrictions.eq("objectType", openmrsObject.getClass().getName()));
+		criteria.add(Restrictions.eq("objectUuid", (openmrsObject.getUuid())));
+		return criteria.list();
+	}
+	
+	@Override
+	public Object getObject(String objectUuid, String objectType) {
+		Criteria criteria = null;
+		try {
+			criteria = getSession().createCriteria(OpenmrsClassLoader.getInstance().loadClass(objectType));
+		}
+		catch (ClassNotFoundException e) {
+			log.warn("Error in obtaining object of type" + objectType, e);
+		}
+		return criteria.add(Restrictions.eq("uuid", objectUuid)).uniqueResult();
+	}
+	
+	@Override
+	public List<Tag> getTags(List<String> objectTypes, List<String> tags) {
+		Criteria criteria = getSession().createCriteria(Tag.class);
+		if (objectTypes != null) {
+			criteria.add(Restrictions.in("objectType", objectTypes));
+		}
+		criteria.add(Restrictions.in("tag", tags));
+		return criteria.list();
+	}
+	
+	@Override
+	public Tag getTag(OpenmrsObject openmrsObject, String tag) {
+		Criteria criteria = getSession().createCriteria(Tag.class);
+		criteria.add(Restrictions.eq("objectType", openmrsObject.getClass().getName()));
+		criteria.add(Restrictions.eq("objectUuid", openmrsObject.getUuid()));
+		criteria.add(Restrictions.eq("tag", tag));
+		return (Tag) criteria.uniqueResult();
 	}
 }

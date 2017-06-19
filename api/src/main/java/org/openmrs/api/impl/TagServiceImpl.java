@@ -12,9 +12,10 @@ package org.openmrs.api.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.OpenmrsObject;
-import org.openmrs.api.UserService;
+import org.openmrs.api.APIException;
 import org.openmrs.Tag;
 import org.openmrs.api.TagService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.db.TagDAO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +32,6 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	
 	private TagDAO dao;
 	
-	UserService userService;
-	
 	/**
 	 * Injected in moduleApplicationContext.xml
 	 */
@@ -40,119 +39,145 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 		this.dao = dao;
 	}
 	
-	/**
-	 * Injected in moduleApplicationContext.xml
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-	
 	@Override
-	@Transactional
 	public Tag getTagByUuid(String uuid) {
 		return dao.getTagByUuid(uuid);
 	}
 	
 	@Override
+	@Transactional(readOnly = false)
 	public Tag saveTag(Tag tag) {
 		return dao.saveTag(tag);
 	}
 	
 	@Override
-	public void removeTag(Tag tag) {
+	@Transactional(readOnly = false)
+	public void deleteTag(Tag tag) {
 		dao.deleteTag(tag);
 	}
 	
 	@Override
-	@Transactional
-	public List<Tag> getAllTags() {
+	@Transactional(readOnly = false)
+	public void removeTag(OpenmrsObject openmrsObject, String tag) {
+		Tag tag1 = dao.getTag(openmrsObject, tag);
+		if (tag1.equals(null)) {
+			log.warn("Tag does not exist");
+		} else {
+			deleteTag(tag1);
+		}
+	}
+	
+	@Override
+	public List<String> getAllTags() {
 		return dao.getAllTags();
 	}
 	
 	@Override
-	@Transactional
-	public Tag getTagById(int id) {
-		return dao.getTagById(id);
+	public Tag getTag(Integer tagId) {
+		return dao.getTag(tagId);
 	}
 	
 	@Override
-	@Transactional
 	public List<Tag> getTags(String tag) {
 		return dao.getTags(tag);
 	}
 	
 	@Override
-	public boolean object_exits(String object_uuid, String object_type) throws ClassNotFoundException {
-		Object object = dao.object_exists(object_uuid, object_type);
-		if (!object.equals(null))
-			return true;
-		return false;
+	public <T extends OpenmrsObject> T getObject(Class<T> objectType, String objectUuid) {
+		Object object;
+		object = dao.getObject(objectUuid, objectType.getName());
+		return objectType.cast(object);
 	}
 	
 	@Override
-	public Tag addTag(OpenmrsObject openmrsObject, String tag) throws Exception {
-		if (duplicateTag(openmrsObject, tag)) {
+	@Transactional(readOnly = false)
+	public Tag addTag(OpenmrsObject openmrsObject, String tag) {
+		boolean check = false;
+		try {
+			check = hasTag(openmrsObject, tag);
+		}
+		catch (Exception e) {}
+		if (check) {
 			log.warn("duplicate Tag for " + openmrsObject);
-			return null;
 		} else {
-			Tag tag1 = new Tag(tag, openmrsObject.getUuid(), openmrsObject.getClass().toString().substring(6));
+			Tag tag1 = new Tag(tag, openmrsObject.getUuid(), openmrsObject.getClass().getName());
 			return saveTag(tag1);
 		}
+		return null;
 	}
 	
 	/**
 	 * Validation Method which logs a warning if u try to add a duplicate tag to an OpenmrsObject
 	 */
-	public boolean duplicateTag(OpenmrsObject openmrsObject, String tag) throws Exception {
-		List<String> list = getTags(openmrsObject);
-		Iterator<String> listIterator = list.iterator();
-		while (listIterator.hasNext()) {
-			if (listIterator.next().equals(tag)) {
-				return true;
-			}
+	public boolean hasTag(OpenmrsObject openmrsObject, String tag) {
+		Tag tag1;
+		tag1 = dao.getTag(openmrsObject, tag);
+		if (tag1.equals(null)) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	@Override
-	@Transactional
-	public List<String> getTags(OpenmrsObject openmrsObject) {
-		List<String> tags = dao.getTags(openmrsObject);
+	public List<Tag> getTags(OpenmrsObject openmrsObject) {
+		List<Tag> tags = dao.getTags(openmrsObject);
 		return tags;
 	}
 	
 	@Override
-	@Transactional
-	public List<Tag> getTags(List<String> object_types, List<String> tags, boolean matchAllTags)
-	        throws ClassNotFoundException {
-		if (!matchAllTags) {
-			List<Tag> tagList = dao.getTags(object_types, tags);
-			return tagList;
-		} else {
-			List<Tag> finalList = new ArrayList<Tag>();
-			List<Tag> tagList = (dao.getTags(object_types, tags));
-			Map<String, List<Tag>> map = new HashMap<String, List<Tag>>();
-			List<String> uniqueObjects = new ArrayList<String>();
-			for (Tag tag1 : tagList) {
-				String key = tag1.getObjectUuid();
-				if (map.containsKey(key)) {
-					List<Tag> list = map.get(key);
-					list.add(tag1);
-					
-				} else {
-					List<Tag> list = new ArrayList<Tag>();
-					uniqueObjects.add(key);
-					list.add(tag1);
-					map.put(key, list);
-				}
-			}
-			Iterator<String> uniqueObjectsIterator = uniqueObjects.iterator();
-			while (uniqueObjectsIterator.hasNext()) {
-				String keyMap = uniqueObjectsIterator.next();
-				if (map.get(keyMap).size() == tags.size())
-					finalList.addAll(map.get(keyMap));
-			}
-			return finalList;
+	public List<Tag> getTags(List<String> objectTypes, List<String> tags) {
+		List<Tag> tagList;
+		if (tags.isEmpty()) {
+			throw new APIException("tags cannot be empty");
 		}
+		try {
+			tagList = dao.getTags(objectTypes, tags);
+		}
+		catch (Exception ex) {
+			throw new APIException(ex);
+		}
+		return tagList;
+	}
+	
+	@Override
+	public <T extends OpenmrsObject> T toClass(String className) {
+		Class<?> name;
+		Object object;
+		try {
+			name = Class.forName(className);
+			object = name.newInstance();
+		}
+		catch (Exception e) {
+			throw new APIException(e);
+		}
+		Class<T> T = (Class<T>) name;
+		return T.cast(object);
+	}
+	
+	@Override
+	public List<OpenmrsObject> getObjectsWithAllTags(List<String> objectTypes, List<String> tags) {
+		List<Tag> tagList = dao.getTags(objectTypes, tags);
+		List<OpenmrsObject> finalList = new ArrayList<OpenmrsObject>();
+		Map<OpenmrsObject, List<Tag>> map = new HashMap<OpenmrsObject, List<Tag>>();
+		for (Tag tag : tagList) {
+			OpenmrsObject key = Context.getService(TagService.class).getObject(toClass(tag.getObjectType()).getClass(),
+			    tag.getObjectUuid());
+			if (map.containsKey(key)) {
+				List<Tag> list = map.get(key);
+				list.add(tag);
+			} else {
+				List<Tag> list = new ArrayList<Tag>();
+				list.add(tag);
+				map.put(key, list);
+			}
+		}
+		Iterator<OpenmrsObject> keyIterator = map.keySet().iterator();
+		while (keyIterator.hasNext()) {
+			OpenmrsObject keyMap = keyIterator.next();
+			if (map.get(keyMap).size() == tags.size()) {
+				finalList.add(keyMap);
+			}
+		}
+		return finalList;
 	}
 }

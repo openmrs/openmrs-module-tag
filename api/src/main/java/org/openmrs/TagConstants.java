@@ -9,13 +9,12 @@
  */
 package org.openmrs;
 
-import org.springframework.stereotype.Component;
-
 /**
  * Contains module's constants.
  */
-@Component("tagConstants")
 public class TagConstants {
 	
 	public final static String MANAGE_TAGS = "Manage Tags";
+	
+	public final static String GET_TAGS = "Get Tags";
 }
