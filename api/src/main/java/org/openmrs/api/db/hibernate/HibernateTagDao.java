@@ -12,19 +12,16 @@ package org.openmrs.api.db.hibernate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.openmrs.OpenmrsObject;
-import org.openmrs.api.APIException;
-import org.openmrs.api.TagService;
-import org.openmrs.api.context.Context;
-import org.openmrs.api.db.DAOException;
 import org.openmrs.api.db.TagDAO;
 import org.openmrs.Tag;
-import org.openmrs.util.OpenmrsClassLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository("tagDAO")
@@ -39,36 +36,58 @@ public class HibernateTagDao implements TagDAO {
 		return sessionFactory.getCurrentSession();
 	}
 	
+	/**
+	 * @see TagDAO#getTagByUuid(String)
+	 */
 	public Tag getTagByUuid(String uuid) {
 		return (Tag) getSession().createCriteria(Tag.class).add(Restrictions.eq("uuid", uuid)).uniqueResult();
 	}
 	
+	/**
+	 * @see TagDAO#saveTag(Tag)
+	 */
 	public Tag saveTag(Tag tag) {
 		getSession().saveOrUpdate(tag);
 		return tag;
 	}
 	
+	/**
+	 * @see TagDAO#deleteTag(Tag)
+	 */
 	@Override
 	public void deleteTag(Tag tag) {
 		getSession().delete(tag);
 	}
 	
+	/**
+	 * @see TagDAO#getAllTags()
+	 */
 	@Override
 	public List<String> getAllTags() {
-		return getSession().createCriteria(Tag.class).setProjection(Projections.property("tag")).list();
+		return getSession().createCriteria(Tag.class).setProjection(Projections.distinct(Projections.property("tag")))
+		        .list();
 	}
 	
+	/**
+	 * @see TagDAO#getTag(Integer)
+	 */
 	@Override
 	public Tag getTag(Integer id) {
 		return (Tag) getSession().get(Tag.class, id);
 	}
 	
+	/**
+	 * @see TagDAO#getTags(String)
+	 */
 	@Override
 	public List<Tag> getTags(String tag) {
 		Criteria criteria = getSession().createCriteria(Tag.class);
 		return criteria.add(Restrictions.like("tag", tag, MatchMode.ANYWHERE)).list();
 	}
 	
+	/**
+	 * @see TagDAO#getTags(OpenmrsObject)
+	 */
 	@Override
 	public List<Tag> getTags(OpenmrsObject openmrsObject) {
 		Criteria criteria = getSession().createCriteria(Tag.class);
@@ -77,33 +96,36 @@ public class HibernateTagDao implements TagDAO {
 		return criteria.list();
 	}
 	
+	/**
+	 * @see TagDAO#getObject(Class, String)
+	 */
 	@Override
-	public Object getObject(String objectUuid, String objectType) {
-		Criteria criteria = null;
-		try {
-			criteria = getSession().createCriteria(OpenmrsClassLoader.getInstance().loadClass(objectType));
-		}
-		catch (ClassNotFoundException e) {
-			log.warn("Error in obtaining object of type" + objectType, e);
-		}
-		return criteria.add(Restrictions.eq("uuid", objectUuid)).uniqueResult();
+	public <T extends OpenmrsObject> T getObject(Class<T> objectType, String objectUuid) {
+		Criteria criteria = getSession().createCriteria(objectType);
+		return (T) criteria.add(Restrictions.eq("uuid", objectUuid).ignoreCase()).uniqueResult();
 	}
 	
+	/**
+	 * @see TagDAO#getTags(List, List)
+	 */
 	@Override
 	public List<Tag> getTags(List<String> objectTypes, List<String> tags) {
 		Criteria criteria = getSession().createCriteria(Tag.class);
-		if (objectTypes != null) {
+		if (CollectionUtils.isNotEmpty(objectTypes)) {
 			criteria.add(Restrictions.in("objectType", objectTypes));
 		}
 		criteria.add(Restrictions.in("tag", tags));
 		return criteria.list();
 	}
 	
+	/**
+	 * @see TagDAO#getTag(String, String, String)
+	 */
 	@Override
-	public Tag getTag(OpenmrsObject openmrsObject, String tag) {
+	public Tag getTag(String objectType, String objectUuid, String tag) {
 		Criteria criteria = getSession().createCriteria(Tag.class);
-		criteria.add(Restrictions.eq("objectType", openmrsObject.getClass().getName()));
-		criteria.add(Restrictions.eq("objectUuid", openmrsObject.getUuid()));
+		criteria.add(Restrictions.eq("objectType", objectType));
+		criteria.add(Restrictions.eq("objectUuid", objectUuid));
 		criteria.add(Restrictions.eq("tag", tag));
 		return (Tag) criteria.uniqueResult();
 	}

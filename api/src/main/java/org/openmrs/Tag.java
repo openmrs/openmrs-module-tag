@@ -26,7 +26,7 @@ public class Tag extends BaseOpenmrsData implements Serializable {
 	private static final long serialVersionUID = 6713376997114869435L;
 	
 	private Integer tagId;
-
+	
 	private String tag;
 	
 	private String objectUuid;

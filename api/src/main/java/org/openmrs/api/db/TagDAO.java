@@ -48,7 +48,7 @@ public interface TagDAO {
 	Tag saveTag(Tag tag);
 	
 	/**
-	 * @see org.openmrs.api.TagService#deleteTag(Tag)
+	 * @see org.openmrs.api.TagService#purgeTag(Tag)
 	 */
 	void deleteTag(Tag tag);
 	
@@ -63,12 +63,17 @@ public interface TagDAO {
 	List<Tag> getTags(List<String> objectType, List<String> tags);
 	
 	/**
-	 * @see org.openmrs.api.TagService#getObject(Class, String)
+	 * @see org.openmrs.api.impl.TagServiceImpl#getObject(Class, String)
 	 */
-	Object getObject(String objectUuid, String objectType);
+	<T extends OpenmrsObject> T getObject(Class<T> objectType, String objectUuid);
 	
 	/**
-	 * @see org.openmrs.api.TagService#removeTag(OpenmrsObject, String)
+	 * Gets a unique tag object from the database having matching type, object uuid, and tag
+	 * 
+	 * @param objectType the java class name of the Object
+	 * @param objectUuid the Uuid of the Object
+	 * @param tag the textual label (tag) on that object
+	 * @return the Tag object with matching parameters
 	 */
-	Tag getTag(OpenmrsObject openmrsObject, String tag);
+	Tag getTag(String objectType, String objectUuid, String tag);
 }

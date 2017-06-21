@@ -17,4 +17,6 @@ public class TagConstants {
 	public final static String MANAGE_TAGS = "Manage Tags";
 	
 	public final static String GET_TAGS = "Get Tags";
+	
+	public final static String VIEW_OBJECTS = "View Objects";
 }

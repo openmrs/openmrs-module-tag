@@ -47,7 +47,7 @@
     </changeSet>
 
     <changeSet id="tag-2017-06-10-10-11" author="jtatia">
-        <createIndex tableName="tag_tag" indexName="tag_name" unique="false">
+        <createIndex tableName="tag_tag" indexName="tag_name">
             <column name="tag"></column>
         </createIndex>
     </changeSet>
