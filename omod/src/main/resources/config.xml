@@ -31,6 +31,9 @@
 		<require_module version="${appuiVersion}">
 			org.openmrs.module.appui
 		</require_module>
+		<require_module version="${webServicesRestVersion}">
+			org.openmrs.module.webservices.rest
+		</require_module>
 	</require_modules>
 	
 
