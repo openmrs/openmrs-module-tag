@@ -19,4 +19,8 @@ public class TagConstants {
 	public final static String GET_TAGS = "Get Tags";
 	
 	public final static String VIEW_OBJECTS = "View Objects";
+	
+	public final static String TAG_UUID = "7379a456-296a-2331-9c83-a3714b82d7ac";
+	
+	public final static String TAG_URI = "tag";
 }

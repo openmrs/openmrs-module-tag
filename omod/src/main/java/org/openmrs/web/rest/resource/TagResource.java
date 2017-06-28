@@ -23,20 +23,22 @@ import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
+import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 /**
  */
-@Resource(name = RestConstants.VERSION_1 + "/tag",
-		supportedClass = Tag.class, supportedOpenmrsVersions = {"1.11.*", "1.12.*", "2.0.*"})
+@Resource(name = RestConstants.VERSION_1 + "/tag", supportedClass = Tag.class, supportedOpenmrsVersions = { "1.11.*",
+        "1.12.*", "2.0.*", "2.1.*" })
 public class TagResource extends DelegatingCrudResource<Tag> {
-
+	
 	/**
 	 * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceHandler#newDelegate()
 	 */
@@ -44,7 +46,7 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 	public Tag newDelegate() {
 		return new Tag();
 	}
-
+	
 	/**
 	 * @see BaseDelegatingResource#getByUniqueId(String)
 	 */
@@ -52,7 +54,7 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 	public Tag getByUniqueId(String uuid) {
 		return getService().getTagByUuid(uuid);
 	}
-
+	
 	/**
 	 * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceHandler#save(Object)
 	 */
@@ -60,69 +62,78 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 	public Tag save(Tag tag) {
 		return getService().saveTag(tag);
 	}
-
+	
 	/**
 	 * @see BaseDelegatingResource#delete(Object,String, RequestContext)
 	 */
 	@Override
 	protected void delete(Tag tag, String reason, RequestContext context) {
-		TagService tagService = Context.getService(TagService.class);
-		tagService.purgeTag(tag);
+		throw new ResourceDoesNotSupportOperationException("delete not allowed on tag");
 	}
-
+	
 	/**
 	 * @see BaseDelegatingResource#purge(Object, RequestContext)
 	 */
 	@Override
 	public void purge(Tag tag, RequestContext context) {
-		if (tag != null) {
-			getService().purgeTag(tag);
-		}
+		getService().purgeTag(tag);
 	}
-
+	
 	/**
 	 * @see BaseDelegatingResource#getRepresentationDescription(Representation)
 	 */
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = null;
-		if (rep instanceof DefaultRepresentation) {
+		if (rep instanceof DefaultRepresentation || rep instanceof RefRepresentation) {
 			description = new DelegatingResourceDescription();
-			description.addProperty("tag");
 			description.addProperty("uuid");
+			description.addProperty("tag");
+			description.addProperty("objectType");
+			description.addProperty("objectUuid");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		} else if (rep instanceof FullRepresentation) {
 			description = new DelegatingResourceDescription();
+			description.addProperty("uuid");
 			description.addProperty("tag");
 			description.addProperty("objectType");
 			description.addProperty("objectUuid");
-			description.addProperty("uuid");
+			description.addProperty("auditInfo");
 			description.addSelfLink();
 		}
 		return description;
 	}
-
+	
 	/**
 	 * @return the TagService
 	 */
 	private TagService getService() {
 		return Context.getService(TagService.class);
 	}
-
+	
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-
+		
 		description.addRequiredProperty("tag");
 		description.addRequiredProperty("objectType");
 		description.addRequiredProperty("objectUuid");
-
+		
 		return description;
 	}
-
+	
 	@Override
-	protected NeedsPaging<String> doGetAll(RequestContext context) throws ResponseException {
-		return new NeedsPaging<String>(Context.getService(TagService.class).getAllTags(), context);
+	protected NeedsPaging<Tag> doGetAll(RequestContext context) throws ResponseException {
+		return new NeedsPaging<Tag>(Context.getService(TagService.class).getTags(""), context);
+	}
+	
+	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		String tagName = context.getRequest().getParameter("tag");
+		if (tagName != null) {
+			return new NeedsPaging<Tag>(getService().getTags(tagName), context);
+		}
+		return super.doSearch(context);
 	}
 }
