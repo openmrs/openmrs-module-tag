@@ -70,7 +70,7 @@
 	</pluginRepositories>
 
 	<properties>
-		<openmrsPlatformVersion>1.11.6</openmrsPlatformVersion>
+		<openmrsPlatformVersion>2.0.0</openmrsPlatformVersion>
 		<webServicesRestVersion>2.19.0</webServicesRestVersion>
 	</properties>
 </project>
