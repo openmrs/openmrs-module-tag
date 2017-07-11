@@ -13,6 +13,8 @@
  */
 package org.openmrs.web.rest.resource;
 
+import org.apache.commons.lang3.StringUtils;
+import org.openmrs.OpenmrsObject;
 import org.openmrs.Tag;
 import org.openmrs.annotation.Handler;
 import org.openmrs.api.TagService;
@@ -20,7 +22,9 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.RepHandler;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
+import org.openmrs.module.webservices.rest.web.api.RestService;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
@@ -30,11 +34,13 @@ import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResou
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
+import org.openmrs.module.webservices.rest.web.response.ConversionException;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
+import org.openmrs.util.OpenmrsClassLoader;
 
-/**
- */
+import java.util.ArrayList;
+
 @Resource(name = RestConstants.VERSION_1 + "/tag", supportedClass = Tag.class, supportedOpenmrsVersions = { "1.11.*",
         "1.12.*", "2.0.*", "2.1.*" })
 public class TagResource extends DelegatingCrudResource<Tag> {
@@ -80,12 +86,27 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 	}
 	
 	/**
+	 * Returns the DefaultRepresentation
+	 */
+	@RepHandler(DefaultRepresentation.class)
+	public SimpleObject asDef(Tag delegate) throws ConversionException {
+		DelegatingResourceDescription description = new DelegatingResourceDescription();
+		description.addProperty("uuid");
+		description.addProperty("tag");
+		description.addLink(delegate.getObjectType().substring(delegate.getObjectType().lastIndexOf(".") + 1).toLowerCase(),
+		    "/" + getUriOfObject(delegate.getObjectType(), delegate.getObjectUuid()));
+		description.addSelfLink();
+		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
+		return convertDelegateToRepresentation(delegate, description);
+	}
+	
+	/**
 	 * @see BaseDelegatingResource#getRepresentationDescription(Representation)
 	 */
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = null;
-		if (rep instanceof DefaultRepresentation || rep instanceof RefRepresentation) {
+		if (rep instanceof RefRepresentation) {
 			description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
 			description.addProperty("tag");
@@ -112,6 +133,9 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 		return Context.getService(TagService.class);
 	}
 	
+	/**
+	 * @see BaseDelegatingResource#getCreatableProperties()
+	 */
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
@@ -123,16 +147,52 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 		return description;
 	}
 	
+	/**
+	 * @see DelegatingCrudResource#doGetAll(RequestContext)
+	 */
 	@Override
 	protected NeedsPaging<Tag> doGetAll(RequestContext context) throws ResponseException {
-		return new NeedsPaging<Tag>(Context.getService(TagService.class).getTags(""), context);
+		throw new ResourceDoesNotSupportOperationException();
+	}
+	
+	private String getUriOfObject(String objectType, String objectUuid) {
+		Class<?> className;
+		OpenmrsObject openmrsObject = null;
+		try {
+			className = OpenmrsClassLoader.getInstance().loadClass(objectType);
+			openmrsObject = (OpenmrsObject) className.newInstance();
+		}
+		catch (ClassNotFoundException e) {}
+		catch (IllegalAccessException e) {}
+		catch (InstantiationException e) {
+			e.printStackTrace();
+		}
+		openmrsObject.setUuid(objectUuid);
+		String Uri = Context.getService(RestService.class)
+		        .getResourceByName("v1/" + objectType.substring(objectType.lastIndexOf(".") + 1).toLowerCase())
+		        .getUri(openmrsObject);
+		
+		return Uri;
 	}
 	
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String tagName = context.getRequest().getParameter("tag");
-		if (tagName != null) {
-			return new NeedsPaging<Tag>(getService().getTags(tagName), context);
+		String objectType = context.getRequest().getParameter("objectType");
+		String objectUuid = context.getRequest().getParameter("objectUuid");
+		if (StringUtils.isNotBlank(objectType)) {
+			ArrayList<Class<? extends OpenmrsObject>> openmrsObjects = new ArrayList<Class<? extends OpenmrsObject>>();
+			try {
+				openmrsObjects.add((Class<? extends OpenmrsObject>) OpenmrsClassLoader.getInstance().loadClass(objectType));
+			}
+			catch (ClassNotFoundException e) {}
+			if (StringUtils.isNotBlank(tagName)) {
+				ArrayList<String> tagNames = new ArrayList<String>();
+				tagNames.add(tagName);
+				return new NeedsPaging<Tag>(getService().getTags(openmrsObjects, tagNames), context);
+			} else if (StringUtils.isNotBlank(objectUuid)) {
+				return new NeedsPaging<Tag>(getService().getTags(objectType, objectUuid), context);
+			}
 		}
 		return super.doSearch(context);
 	}

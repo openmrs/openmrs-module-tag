@@ -26,27 +26,27 @@
 		<dependency>
 			<groupId>org.openmrs.web</groupId>
 			<artifactId>openmrs-web</artifactId>
-			<scope>provided</scope>
 			<classifier>tests</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.openmrs.module</groupId>
-			<artifactId>webservices.rest-omod</artifactId>
-			<version>${webServicesRestVersion}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>webservices.rest-omod</artifactId>
 			<version>${webServicesRestVersion}</version>
-			<classifier>tests</classifier>
-			<scope>test</scope>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>webservices.rest-omod</artifactId>
+			<version>${webServicesRestVersion}</version>
+			<type>test-jar</type>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>webservices.rest-omod-common</artifactId>
 			<version>${webServicesRestVersion}</version>
-			<classifier>tests</classifier>
+			<type>test-jar</type>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

@@ -77,11 +77,14 @@ public class HibernateTagDao implements TagDAO {
 	}
 	
 	/**
-	 * @see TagDAO#getTags(String)
+	 * @see TagDAO#getTags(String, boolean)
 	 */
 	@Override
-	public List<Tag> getTags(String tag) {
+	public List<Tag> getTags(String tag, boolean exactMatch) {
 		Criteria criteria = getSession().createCriteria(Tag.class);
+		if (exactMatch) {
+			return criteria.add(Restrictions.eq("tag", tag)).list();
+		}
 		return criteria.add(Restrictions.like("tag", tag, MatchMode.ANYWHERE)).list();
 	}
 	
@@ -93,6 +96,17 @@ public class HibernateTagDao implements TagDAO {
 		Criteria criteria = getSession().createCriteria(Tag.class);
 		criteria.add(Restrictions.eq("objectType", openmrsObject.getClass().getName()));
 		criteria.add(Restrictions.eq("objectUuid", (openmrsObject.getUuid())));
+		return criteria.list();
+	}
+	
+	/**
+	 * @see TagDAO#getTags(String, String)
+	 */
+	@Override
+	public List<Tag> getTags(String objectType, String objectUuid) {
+		Criteria criteria = getSession().createCriteria(Tag.class);
+		criteria.add(Restrictions.eq("objectType", objectType));
+		criteria.add(Restrictions.eq("objectUuid", objectUuid));
 		return criteria.list();
 	}
 	

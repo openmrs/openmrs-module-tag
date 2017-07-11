@@ -3,10 +3,10 @@ package org.openmrs.web.rest.resource;
 import org.openmrs.Tag;
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.TagConstants;
 import org.openmrs.api.TagService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResourceTest;
+import org.openmrs.web.rest.TagRestTestConstants;
 
 public class TagResourceTest extends BaseDelegatingResourceTest<TagResource, Tag> {
 	
@@ -26,8 +26,6 @@ public class TagResourceTest extends BaseDelegatingResourceTest<TagResource, Tag
 	public void validateDefaultRepresentation() throws Exception {
 		super.validateDefaultRepresentation();
 		assertPropEquals("tag", getObject().getTag());
-		assertPropEquals("objectType", getObject().getObjectType());
-		assertPropEquals("objectUuid", getObject().getObjectUuid());
 		assertPropEquals("uuid", getObject().getUuid());
 	}
 	
@@ -56,7 +54,7 @@ public class TagResourceTest extends BaseDelegatingResourceTest<TagResource, Tag
 	
 	@Override
 	public String getUuidProperty() {
-		return TagConstants.TAG_UUID;
+		return TagRestTestConstants.TAG_UUID;
 	}
 	
 	@Test

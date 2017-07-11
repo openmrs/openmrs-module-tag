@@ -78,10 +78,11 @@ public interface TagService extends OpenmrsService {
 	 * supported
 	 * 
 	 * @param searchPhrase the phrase which the tags should contain
+	 * @param exactMatch boolean input which returns tags with exact match (if true)
 	 * @return List of Tag Objects
 	 */
 	@Authorized(TagConstants.GET_TAGS)
-	List<Tag> getTags(String searchPhrase);
+	List<Tag> getTags(String searchPhrase, boolean exactMatch);
 	
 	/**
 	 * Fetches a list of All Unique String Tags.
@@ -113,6 +114,16 @@ public interface TagService extends OpenmrsService {
 	List<Tag> getTags(OpenmrsObject openmrsObject);
 	
 	/**
+	 * Fetches a list of tags objects added to the openmrs object of give type and uuid.
+	 * 
+	 * @param objectType the java class name of the object
+	 * @param objectUuid the uuid of the object
+	 * @return a list of tag objects having the same object type and uuid
+	 */
+	@Authorized(TagConstants.GET_TAGS)
+	List<Tag> getTags(String objectType, String objectUuid);
+	
+	/**
 	 * Fetches all tag objects where the type is in the specified list of types and the tag is in
 	 * the specified list of tags. Throws an APIException if tags list is empty.
 	 * 
@@ -123,15 +134,4 @@ public interface TagService extends OpenmrsService {
 	 */
 	@Authorized(TagConstants.GET_TAGS)
 	List<Tag> getTags(List<Class<? extends OpenmrsObject>> objectTypes, List<String> tags);
-	
-	/**
-	 * Gets a list of OpenMrs Objects which have a matching object type, and all the tags.
-	 * 
-	 * @param objectTypes the permissible object_types to be searched against (objectTypes should be
-	 *            the Java Class)
-	 * @param tags the list of tags that all objects should have
-	 * @return a list of Openmrs Objects
-	 */
-	@Authorized(TagConstants.VIEW_OBJECTS)
-	List<OpenmrsObject> getObjectsWithAllTags(List<Class<? extends OpenmrsObject>> objectTypes, List<String> tags);
 }
