@@ -9,7 +9,6 @@
  */
 package org.openmrs.api;
 
-import org.apache.poi.hssf.record.formula.functions.T;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Encounter;
@@ -72,7 +71,7 @@ public class TagServiceTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	@Test
-	public void getTags_shouldReturnListOfTagsOnAnOpenmrsObjectTakingInStringInputs() throws Exception {
+	public void getTags_shouldReturnListOfTagsOnAnOpenmrsObjectTakingObjectTypeAndObjectUuidParameters() throws Exception {
 		List<Tag> tags = tagService.getTags("org.openmrs.Encounter", "e403fafb-e5e4-42d0-9d11-4f52e89d148c");
 		assertEquals(tags.size(), 3);
 	}

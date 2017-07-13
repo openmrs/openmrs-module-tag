@@ -30,16 +30,14 @@ import org.openmrs.module.webservices.rest.web.representation.FullRepresentation
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
-import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource;
-import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource;
-import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
-import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
+import org.openmrs.module.webservices.rest.web.resource.impl.*;
 import org.openmrs.module.webservices.rest.web.response.ConversionException;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.util.OpenmrsClassLoader;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Resource(name = RestConstants.VERSION_1 + "/tag", supportedClass = Tag.class, supportedOpenmrsVersions = { "1.11.*",
         "1.12.*", "2.0.*", "2.1.*" })
@@ -185,15 +183,20 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 			try {
 				openmrsObjects.add((Class<? extends OpenmrsObject>) OpenmrsClassLoader.getInstance().loadClass(objectType));
 			}
-			catch (ClassNotFoundException e) {}
+			catch (ClassNotFoundException e) {
+				log.error("Class of" + objectType + "Not Found", e);
+			}
 			if (StringUtils.isNotBlank(tagName)) {
 				ArrayList<String> tagNames = new ArrayList<String>();
 				tagNames.add(tagName);
 				return new NeedsPaging<Tag>(getService().getTags(openmrsObjects, tagNames), context);
 			} else if (StringUtils.isNotBlank(objectUuid)) {
 				return new NeedsPaging<Tag>(getService().getTags(objectType, objectUuid), context);
+			} else {
+				return new EmptySearchResult();
 			}
+		} else {
+			return new EmptySearchResult();
 		}
-		return super.doSearch(context);
 	}
 }

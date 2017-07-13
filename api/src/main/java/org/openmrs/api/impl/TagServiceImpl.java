@@ -184,7 +184,7 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	}
 	
 	/**
-	 * Gets a list of OpenMrs Objects which have a matching object type, and all the tags.
+	 * Gets a list of OpenmrsObjects which have a matching object type, and all the tags.
 	 * 
 	 * @param objectTypes the permissible object_types to be searched against (objectTypes should be
 	 *            the Java Class)

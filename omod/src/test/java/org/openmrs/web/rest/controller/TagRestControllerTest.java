@@ -4,10 +4,13 @@ import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.openmrs.Tag;
 import org.openmrs.api.TagService;
 import org.openmrs.api.context.Context;
+import org.openmrs.test.*;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.test.Util;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
@@ -26,13 +29,16 @@ public class TagRestControllerTest extends MainResourceControllerTest {
 	
 	TagService tagService;
 	
-	public static final String TAG_RESOURCE_DATASET = "TagResourceDataSet.xml";
+	private static final String TAG_RESOURCE_DATASET = "TagServiceDataset.xml";
 	
 	@Before
 	public void setup() throws Exception {
 		tagService = Context.getService(TagService.class);
 		executeDataSet(TAG_RESOURCE_DATASET);
 	}
+	
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 	
 	@Override
 	public String getURI() {
@@ -50,8 +56,9 @@ public class TagRestControllerTest extends MainResourceControllerTest {
 	}
 	
 	@Override
-	@Test(expected = ResourceDoesNotSupportOperationException.class)
+	@Test
 	public void shouldGetAll() throws Exception {
+		thrown.expect(ResourceDoesNotSupportOperationException.class);
 		super.shouldGetAll();
 	}
 	

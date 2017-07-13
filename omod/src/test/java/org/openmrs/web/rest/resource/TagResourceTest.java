@@ -10,7 +10,7 @@ import org.openmrs.web.rest.TagRestTestConstants;
 
 public class TagResourceTest extends BaseDelegatingResourceTest<TagResource, Tag> {
 	
-	public static final String TAG_RESOURCE_DATASET = "TagResourceDataSet.xml";
+	private static final String TAG_RESOURCE_DATASET = "TagServiceDataset.xml";
 	
 	@Before
 	public void setup() throws Exception {
@@ -57,8 +57,4 @@ public class TagResourceTest extends BaseDelegatingResourceTest<TagResource, Tag
 		return TagRestTestConstants.TAG_UUID;
 	}
 	
-	@Test
-	public void shouldLoadResource() throws Exception {
-		TagResource resource = getResource();
-	}
 }
