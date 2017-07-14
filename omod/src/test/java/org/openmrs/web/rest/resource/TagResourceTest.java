@@ -27,6 +27,8 @@ public class TagResourceTest extends BaseDelegatingResourceTest<TagResource, Tag
 		super.validateDefaultRepresentation();
 		assertPropEquals("tag", getObject().getTag());
 		assertPropEquals("uuid", getObject().getUuid());
+		assertPropEquals("objectType", getObject().getObjectType());
+		assertPropEquals("objectUuid", getObject().getObjectUuid());
 	}
 	
 	@Override
@@ -40,16 +42,8 @@ public class TagResourceTest extends BaseDelegatingResourceTest<TagResource, Tag
 	}
 	
 	@Override
-	public void validateRefRepresentation() throws Exception {
-		assertPropEquals("tag", getObject().getTag());
-		assertPropEquals("objectType", getObject().getObjectType());
-		assertPropEquals("objectUuid", getObject().getObjectUuid());
-		assertPropEquals("uuid", getObject().getUuid());
-	}
-	
-	@Override
 	public String getDisplayProperty() {
-		return null;
+		return getObject().getTag();
 	}
 	
 	@Override

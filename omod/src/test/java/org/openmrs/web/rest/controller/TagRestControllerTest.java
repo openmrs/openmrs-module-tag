@@ -10,7 +10,6 @@ import org.junit.rules.ExpectedException;
 import org.openmrs.Tag;
 import org.openmrs.api.TagService;
 import org.openmrs.api.context.Context;
-import org.openmrs.test.*;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.test.Util;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
@@ -27,7 +26,7 @@ import static org.junit.Assert.assertThat;
 
 public class TagRestControllerTest extends MainResourceControllerTest {
 	
-	TagService tagService;
+	private TagService tagService;
 	
 	private static final String TAG_RESOURCE_DATASET = "TagServiceDataset.xml";
 	
@@ -70,19 +69,27 @@ public class TagRestControllerTest extends MainResourceControllerTest {
 	}
 	
 	@Test
+	public void shouldFindTagByTagName() throws Exception {
+		MockHttpServletRequest req = request(RequestMethod.GET, getURI() + "/" + "Initial");
+		SimpleObject result = deserialize(handle(req));
+		assertThat((String) PropertyUtils.getProperty(result, "tag"), is("Initial"));
+	}
+	
+	@Test
 	public void shouldFindTagByTagObjectTypeAndTagName() throws Exception {
 		SimpleObject response = deserialize(handle(newGetRequest(getURI(), new Parameter("tag", "Initial"), new Parameter(
-		        "objectType", "org.openmrs.Encounter"))));
+		        "objectType", "org.openmrs.Encounter"), new Parameter("v", "default"))));
 		List<Object> results = Util.getResultsList(response);
-		assertEquals(results.size(), 3);
+		assertEquals(3, results.size());
 	}
 	
 	@Test
 	public void shouldFindTagByTagObjectTypeAndObjectUuid() throws Exception {
 		SimpleObject response = deserialize(handle(newGetRequest(getURI(), new Parameter("objectType",
-		        "org.openmrs.Encounter"), new Parameter("objectUuid", "e403fafb-e5e4-42d0-9d11-4f52e89d148c"))));
+		        "org.openmrs.Encounter"), new Parameter("objectUuid", "e403fafb-e5e4-42d0-9d11-4f52e89d148c"),
+		    new Parameter("v", "full"))));
 		List<Object> results = Util.getResultsList(response);
-		assertEquals(results.size(), 3);
+		assertEquals(3, results.size());
 	}
 	
 	@Test
@@ -101,9 +108,9 @@ public class TagRestControllerTest extends MainResourceControllerTest {
 		tag.add("objectType", objectType);
 		tag.add("objectUuid", objectUuid);
 		List<Tag> tagList = Context.getService(TagService.class).getTags(objectType, objectUuid);
-		assertEquals(tagList.size(), 2);
+		assertEquals(2, tagList.size());
 		SimpleObject result = deserialize(handle(newPostRequest(getURI(), tag)));
 		List<Tag> tagList1 = Context.getService(TagService.class).getTags(objectType, objectUuid);
-		assertEquals(tagList1.size(), 3);
+		assertEquals(3, tagList1.size());
 	}
 }
