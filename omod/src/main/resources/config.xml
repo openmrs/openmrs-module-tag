@@ -35,7 +35,7 @@
 			org.openmrs.module.webservices.rest
 		</require_module>
 	</require_modules>
-	
+
 
 	<mappingFiles>
 		Tag.hbm.xml
