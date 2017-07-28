@@ -102,11 +102,11 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	}
 	
 	/**
-	 * @see TagService#getTags(String)
+	 * @see TagService#getTags(String, boolean)
 	 */
 	@Override
-	public List<Tag> getTags(String searchPhrase) {
-		return dao.getTags(searchPhrase);
+	public List<Tag> getTags(String searchPhrase, boolean exactMatch) {
+		return dao.getTags(searchPhrase, exactMatch);
 	}
 	
 	/**
@@ -147,6 +147,14 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	}
 	
 	/**
+	 * @see TagService#getTags(String, String)
+	 */
+	@Override
+	public List<Tag> getTags(String objectType, String objectUuid) {
+		return dao.getTags(objectType, objectUuid);
+	}
+	
+	/**
 	 * @see TagService#getTags(List, List)
 	 */
 	@Override
@@ -176,10 +184,14 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 	}
 	
 	/**
-	 * @see TagService#getObjectsWithAllTags(List, List)
+	 * Gets a list of OpenmrsObjects which have a matching object type, and all the tags.
+	 * 
+	 * @param objectTypes the permissible object_types to be searched against (objectTypes should be
+	 *            the Java Class)
+	 * @param tags the list of tags that all objects should have
+	 * @return a list of Openmrs Objects
 	 */
-	@Override
-	public List<OpenmrsObject> getObjectsWithAllTags(List<Class<? extends OpenmrsObject>> objectTypes, List<String> tags) {
+	private List<OpenmrsObject> getObjectsWithAllTags(List<Class<? extends OpenmrsObject>> objectTypes, List<String> tags) {
 		List<String> types = new ArrayList<String>();
 		Iterator<Class<? extends OpenmrsObject>> iterator = objectTypes.iterator();
 		while (iterator.hasNext()) {

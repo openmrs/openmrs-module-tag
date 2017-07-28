@@ -51,7 +51,7 @@
             <column name="tag"></column>
         </createIndex>
     </changeSet>
-    <changeSet id="tag-2017-06-10-10-11" author="jtatia">
+    <changeSet id="tag-2017-06-10-12-12" author="jtatia">
         <createIndex tableName="tag_tag" indexName="object_type">
             <column name="object_type"></column>
         </createIndex>

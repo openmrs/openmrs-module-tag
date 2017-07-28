@@ -28,8 +28,25 @@
 
 	<dependencyManagement>
 		<dependencies>
-				<dependency><groupId>org.openmrs.contrib</groupId><artifactId>testutils</artifactId><version>${openmrsTestutilsVersion}</version><scope>test</scope></dependency>
-
+			<dependency>
+				<groupId>org.openmrs.contrib</groupId>
+				<artifactId>testutils</artifactId>
+				<version>${openmrsTestutilsVersion}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>webservices.rest-omod</artifactId>
+				<version>${webServicesRestVersion}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>webservices.rest-omod-common</artifactId>
+				<version>${webServicesRestVersion}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -59,5 +76,6 @@
 
 	<properties>
 		<openmrsPlatformVersion>1.11.6</openmrsPlatformVersion>
+		<webServicesRestVersion>2.19.0</webServicesRestVersion>
 	</properties>
 </project>

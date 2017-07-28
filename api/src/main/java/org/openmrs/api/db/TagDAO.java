@@ -33,14 +33,19 @@ public interface TagDAO {
 	Tag getTag(Integer id);
 	
 	/**
-	 * @see org.openmrs.api.TagService#getTags(String)
+	 * @see org.openmrs.api.TagService#getTags(String, boolean)
 	 */
-	List<Tag> getTags(String tag);
+	List<Tag> getTags(String tag, boolean exactMatch);
 	
 	/**
 	 * @see org.openmrs.api.TagService#getTags(OpenmrsObject)
 	 */
 	List<Tag> getTags(OpenmrsObject openmrsObject);
+	
+	/**
+	 * @see org.openmrs.api.TagService#getTags(String, String)
+	 */
+	List<Tag> getTags(String objectType, String objectUuid);
 	
 	/**
 	 * @see org.openmrs.api.TagService#saveTag(Tag)
