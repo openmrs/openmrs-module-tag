@@ -1,4 +1,4 @@
-package org.openmrs.web.rest.controller;
+package org.openmrs.module.tag.web.rest.controller;
 
 import java.util.List;
 
@@ -7,14 +7,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openmrs.Tag;
-import org.openmrs.api.TagService;
+import org.openmrs.module.tag.Tag;
+import org.openmrs.module.tag.api.TagService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.test.Util;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest;
-import org.openmrs.web.rest.TagRestTestConstants;
+import org.openmrs.module.tag.web.rest.TagRestTestConstants;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -72,6 +72,7 @@ public class TagRestControllerTest extends MainResourceControllerTest {
 	public void shouldFindTagByTagName() throws Exception {
 		MockHttpServletRequest req = request(RequestMethod.GET, getURI() + "/" + "Initial");
 		SimpleObject result = deserialize(handle(req));
+		System.out.println(result);
 		assertThat((String) PropertyUtils.getProperty(result, "tag"), is("Initial"));
 	}
 	

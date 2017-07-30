@@ -3,8 +3,7 @@ angular.module('tagService', ['ngResource', 'uicommons.common'])
         return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/tag/:uuid", {
             uuid: '@uuid'
         },{
-            get: { method:'GET', isArray:false },
-            delete: { method: 'DELETE', isArray:false}
+            get: { method:'GET', isArray:false }
         });
     })
     .factory('TagService', function(Tag) {
@@ -12,13 +11,13 @@ angular.module('tagService', ['ngResource', 'uicommons.common'])
         return {
 
             /**
-             * Fetches Tag with given uuid
+             * Fetches Tag
              *
-             * @param tagUuid to search against
+             * @param params to search against
              * @returns $promise of Tag object (REST ref representation by default)
              */
-            getTag: function(tagUuid) {
-                return Tag.get(tagUuid).$promise.then(function(res) {
+            getTag: function (params) {
+                return Tag.query(params).$promise.then(function(res) {
                     return res.result;
                 });
             },
@@ -36,13 +35,12 @@ angular.module('tagService', ['ngResource', 'uicommons.common'])
             /**
              * deletes the object with given uuid
              *
-             * @param tagUuid
+             * @param tag
              * @returns
              */
-            deleteTag: function(tagUuid) {
-                return new Tag.delete(tagUuid).$promise.then(function (res) {
-                    res.result;
-                })
+            deleteTag: function(tag) {
+                var toDelete = new Tag({ uuid: tag.uuid });
+                toDelete.$delete();
             }
         }
     });

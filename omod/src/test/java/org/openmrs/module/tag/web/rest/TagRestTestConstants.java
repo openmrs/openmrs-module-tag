@@ -7,16 +7,14 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs;
+package org.openmrs.module.tag.web.rest;
 
 /**
- * Contains module's constants.
+ * Contains Constants for Testing purposes
  */
-public class TagConstants {
+public class TagRestTestConstants {
 	
-	public final static String MANAGE_TAGS = "Manage Tags";
+	public final static String TAG_UUID = "7379a456-296a-2331-9c83-a3714b82d7ac";
 	
-	public final static String GET_TAGS = "Get Tags";
-	
-	public final static String VIEW_OBJECTS = "View Objects";
+	public final static String TAG_URI = "tag";
 }

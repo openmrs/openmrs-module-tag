@@ -1,12 +1,12 @@
-package org.openmrs.web.rest.resource;
+package org.openmrs.module.tag.web.rest.resource;
 
-import org.openmrs.Tag;
+import org.openmrs.module.tag.Tag;
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.api.TagService;
+import org.openmrs.module.tag.api.TagService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResourceTest;
-import org.openmrs.web.rest.TagRestTestConstants;
+import org.openmrs.module.tag.web.rest.TagRestTestConstants;
 
 public class TagResourceTest extends BaseDelegatingResourceTest<TagResource, Tag> {
 	

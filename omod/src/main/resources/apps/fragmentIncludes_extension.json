@@ -1,9 +1,9 @@
 [
   {
-    "id": "${project.parent.groupId}.${project.parent.artifactId}.patientDashboard.secondColumnFragments",
+    "id": "org.openmrs.module.tag.patientDashboard.secondColumnFragments",
     "extensionPointId": "patientDashboard.secondColumnFragments",
     "extensionParams": {
-      "provider": "${project.parent.artifactId}",
+      "provider": "tag",
       "fragment": "tags"
     }
   }
