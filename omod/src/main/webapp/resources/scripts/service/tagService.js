@@ -1,10 +1,10 @@
 angular.module('tagService', ['ngResource'])
     .factory('Tag', function($resource) {
-        return $resource("/" + "openmrs"  + "/ws/rest/v1/tag/:uuid", {
+        return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/tag/:uuid", {
             uuid: '@uuid'
         },{
             query: { method:'GET', isArray:false },
-            create: {method:'POST'}
+            delete: {method:'DELETE'}
         });
     })
     .factory('TagService', function(Tag) {
@@ -31,18 +31,17 @@ angular.module('tagService', ['ngResource'])
              */
             createTag: function(tag) {
                 var created = new Tag(tag);
-                return Tag.create(tag).$promise.then(function (res) {
-                    return res.result;
-                })
+                created.$save();
+                return created;
+
             },
 
             /**
-             * Soft-deletes a tag
+             * Deletes a tag
              * @param tag must have a uuid property, but may be a minimal representation
              */
             deleteTag: function(tag) {
-                var toDelete = new Tag({ uuid: tag.uuid });
-                toDelete.$delete();
+                Tag.delete({uuid: tag.uuid, purge:true});
             }
         }
     });

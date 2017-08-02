@@ -72,7 +72,6 @@ public class TagRestControllerTest extends MainResourceControllerTest {
 	public void shouldFindTagByTagName() throws Exception {
 		MockHttpServletRequest req = request(RequestMethod.GET, getURI() + "/" + "Initial");
 		SimpleObject result = deserialize(handle(req));
-		System.out.println(result);
 		assertThat((String) PropertyUtils.getProperty(result, "tag"), is("Initial"));
 	}
 	

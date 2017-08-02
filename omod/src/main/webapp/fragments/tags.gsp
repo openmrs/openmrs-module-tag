@@ -9,18 +9,50 @@
 
 %>
 
-<div class="info-section tags">
+<div class="info-section tags" ng-app="Tag" ng-controller="tagCtrl" ng-init="init('${ patient.patient.uuid }')">
     <div class="info-header">
+        <script type="text/ng-template" id="addDialogTemplate">
+        <div class="dialog-header">
+            <h3> ${ ui.message("tag.addTag")}</h3>
+        </div>
+        <div class="dialog-content">
+            <div style="text-align:center;">
+                <input type="text"  placeholder="Enter Tag" ng-model="addedTag" />
+            </div>
+            <div>
+                <button class="confirm right" ng-click="confirm(addedTag)">${ ui.message("uicommons.save") }</button>
+                <button class="cancel" ng-click="closeThisDialog()">${ ui.message("uicommons.cancel") }</button>
+            </div>
+        </div>
+        </script>
+
+
         <i class="icon-tags"></i>
-        <h3>${ ui.message("Tags").toUpperCase() }</h3>
-        <i class="icon-plus add-action right" onclick=""></i>
+        <h3>${ ui.message("tag.HeaderMessage").toUpperCase() }</h3>
+        <a ng-click="showAddDialog()"><i class="icon-plus add-action right"></i></a>
     </div>
         <div class="info-body">
-            <div ng-app="Tag" ng-controller="tagCtrl" ng-init="init('${ patient.patient.uuid }')">
-                <ul ng-repeat="tag in tags">
-                    <li>{{ tag.display }}<i class="icon-remove delete-action right" title="DELETE"></i></li>
+                <script type="text/ng-template" id="dialogTemplate">
+                <div class="dialog-header">
+                    <h3>${ui.message("tag.deleteTag")}</h3>
+                </div>
+                <div class="dialog-content">
+                    <div>
+                        <label>
+                            <%= ui.message("tag.deleteTagMessage", "{{ ngDialogData.tag }}") %>
+                        </label>
+                    </div>
+                    <div>
+                        <button class="confirm right" ng-click="confirm()">${ ui.message("uicommons.confirm") }</button>
+                        <button class="cancel" ng-click="closeThisDialog()">${ ui.message("uicommons.cancel") }</button>
+                    </div>
+                </div>
+                </script>
+                <ul>
+                    <li ng-repeat="tag in tags">
+                        {{ tag.display }}<a ng-click="showDialog(tag)"><i class="icon-remove delete-action right" title="DELETE"></i></a>
+                    </li>
                 </ul>
-                <p ng-show="{{tags[0].display === null}}">None</p>
-            </div>
+                <p ng-show=" tags[0].display === null ">None</p>
     </div>
     </div>

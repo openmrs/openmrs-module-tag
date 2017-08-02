@@ -53,12 +53,6 @@
 				<version>${uicommonsVersion}</version>
 				<scope>provided</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.openmrs.module</groupId>
-				<artifactId>uicommons-api</artifactId>
-				<version>${uicommonsVersion}</version>
-				<scope>provided</scope>
-			</dependency>
 
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
@@ -118,7 +112,7 @@
 		<openmrsPlatformVersion>1.11.6</openmrsPlatformVersion>
 		<webServicesRestVersion>2.19.0</webServicesRestVersion>
 		<uiframeworkVersion>3.11.0</uiframeworkVersion>
-		<uicommonsModuleVersion>2.3</uicommonsModuleVersion>
+		<uicommonsModuleVersion>2.1</uicommonsModuleVersion>
 		<appframeworkVersion>2.10</appframeworkVersion>
 		<openmrsTestutilsVersion>1.5</openmrsTestutilsVersion>
 		<coreAppsVersion>1.11.1</coreAppsVersion>
