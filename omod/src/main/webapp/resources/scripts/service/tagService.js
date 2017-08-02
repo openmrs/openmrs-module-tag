@@ -1,9 +1,10 @@
-angular.module('tagService', ['ngResource', 'uicommons.common'])
+angular.module('tagService', ['ngResource'])
     .factory('Tag', function($resource) {
-        return $resource("/" + OPENMRS_CONTEXT_PATH  + "/ws/rest/v1/tag/:uuid", {
+        return $resource("/" + "openmrs"  + "/ws/rest/v1/tag/:uuid", {
             uuid: '@uuid'
         },{
-            get: { method:'GET', isArray:false }
+            query: { method:'GET', isArray:false },
+            create: {method:'POST'}
         });
     })
     .factory('TagService', function(Tag) {
@@ -11,32 +12,33 @@ angular.module('tagService', ['ngResource', 'uicommons.common'])
         return {
 
             /**
-             * Fetches Tag
+             * Fetches Tags
              *
              * @param params to search against
-             * @returns $promise of Tag object (REST ref representation by default)
+             * @returns $promise of array of matching Tags (REST ref representation by default)
              */
-            getTag: function (params) {
+            getTags: function(params) {
                 return Tag.query(params).$promise.then(function(res) {
-                    return res.result;
+                    return res.results;
                 });
             },
 
             /**
-             * Creates a new tag object
+             * Creates a new tag
              *
-             * @param tag the object to be created
-             * @returns {*}
+             * @param tag
+             * @returns {Tag}
              */
-            addTag: function (tag) {
-                return new Tag(tag).$save();
+            createTag: function(tag) {
+                var created = new Tag(tag);
+                return Tag.create(tag).$promise.then(function (res) {
+                    return res.result;
+                })
             },
 
             /**
-             * deletes the object with given uuid
-             *
-             * @param tag
-             * @returns
+             * Soft-deletes a tag
+             * @param tag must have a uuid property, but may be a minimal representation
              */
             deleteTag: function(tag) {
                 var toDelete = new Tag({ uuid: tag.uuid });

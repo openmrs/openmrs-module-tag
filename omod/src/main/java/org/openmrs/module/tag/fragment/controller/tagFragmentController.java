@@ -16,15 +16,12 @@ package org.openmrs.module.tag.fragment.controller;
 
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
+import org.openmrs.module.coreapps.helper.SimplePatientPageController;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.annotation.FragmentParam;
 import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 
-public class tagFragmentController {
-	
-	public void controller(FragmentModel model, @FragmentParam("patientId") Patient patient, UiUtils ui) {
-		
-		model.addAttribute("patientUuid", patient.getUuid());
-	}
+public class tagFragmentController extends SimplePatientPageController {
+
 }

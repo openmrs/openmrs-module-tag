@@ -1,18 +1,21 @@
 
-angular.module('Tag',['tagService', 'ui.bootstrap'])
-    .controller('tagCtrl',['$scope','tagService', function ($scope, TagService) {
-
-       /* $scope.init = function (patientUuid) {
-            $scope.patientUuid = patientUuid;
+var app  = angular.module('Tag',['tagService']);
+    app.controller('tagCtrl',function ($scope,TagService) {
+       $scope.tag1="NO"
+        $scope.init = function(personUuid) {
+            $scope.thisPersonUuid = personUuid;
+            TagService.getTags({objectType:'org.openmrs.Person', objectUuid:personUuid}).then(function(results) {
+                $scope.tag1 = "YES";
+                $scope.tags = results;
+             });
+/*            var Tag1 = {tag:'Created', objectType: 'org.openmrs.Person', objectUuid: personUuid};
+            TagService.createTag(Tag1).then(function (result) {
+                $scope.tag1="Inside";
+                $scope.cp=result;
+            });
+  */      }
+        if ($scope.tags == null){
+            $scope.tags = null;
         }
-        $scope.params = {'objectType':'org.openmrs.Patient', 'objectUuid':patientUuid};
-        */
-       $scope.param = {'uuid' : 'ddb97bda-09bb-4225-a9d4-09ba68d82755'};
-            TagService.getTag(param).then(function (response) {
-            $scope.tags=(response.data);
-        }),
-            function () {
-            $scope.tags="";
-            };
-    }]);
+    });
 
