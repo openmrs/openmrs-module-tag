@@ -12,7 +12,7 @@
 			${project.parent.description}
 	</description>
 
-	<activator>org.openmrs.TagActivator</activator>
+	<activator>org.openmrs.module.tag.TagActivator</activator>
 	
 	<!-- /Base Module Properties -->
 	
@@ -35,7 +35,7 @@
 			org.openmrs.module.webservices.rest
 		</require_module>
 	</require_modules>
-	
+
 
 	<mappingFiles>
 		Tag.hbm.xml

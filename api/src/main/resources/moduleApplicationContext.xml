@@ -23,7 +23,7 @@
   		    http://www.springframework.org/schema/util
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-    <context:component-scan base-package="org.openmrs" />
+    <context:component-scan base-package="org.openmrs.module.tag" />
 
     <!-- Wraps TagService methods in DB transactions and OpenMRS interceptors,
     which set audit info like dateCreated, changedBy, etc.-->
@@ -33,7 +33,7 @@
             <ref bean="transactionManager" />
         </property>
         <property name="target">
-            <bean class="org.openmrs.api.impl.TagServiceImpl">
+            <bean class="org.openmrs.module.tag.api.impl.TagServiceImpl">
                 <property name="dao" ref="tagDAO" />
             </bean>
         </property>
@@ -50,7 +50,7 @@
     <bean parent="serviceContext">
         <property name="moduleService">
             <list>
-                <value>org.openmrs.api.TagService</value>
+                <value>org.openmrs.module.tag.api.TagService</value>
                 <ref bean="tagService"/>
             </list>
         </property>

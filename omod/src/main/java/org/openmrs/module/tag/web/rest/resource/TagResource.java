@@ -11,12 +11,12 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.web.rest.resource;
+package org.openmrs.module.tag.web.rest.resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.OpenmrsObject;
-import org.openmrs.Tag;
-import org.openmrs.api.TagService;
+import org.openmrs.module.tag.Tag;
+import org.openmrs.module.tag.api.TagService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -117,6 +117,8 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 			description.addProperty("uuid");
 			description.addProperty("objectType");
 			description.addProperty("objectUuid");
+			description.addSelfLink();
+			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		}
 		List<Tag> tagList = Context.getService(TagService.class).getTags(delegate.getTag(), true);
 		Iterator<Tag> tagIterator = tagList.iterator();
@@ -125,8 +127,6 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 			description.addLink(getResourceName(iterator.getObjectType()),
 			    getUriOfObject(iterator.getObjectType(), iterator.getObjectUuid()));
 		}
-		description.addSelfLink();
-		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		return convertDelegateToRepresentation(delegate, description);
 	}
 	
