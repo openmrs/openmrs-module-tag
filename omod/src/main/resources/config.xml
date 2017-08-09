@@ -6,13 +6,13 @@
 	<id>${project.parent.artifactId}</id>
 	<name>${project.parent.name}</name>
 	<version>${project.parent.version}</version>
-	<package>org.openmrs.module.tag</package>
+	<package>org.openmrs.tag</package>
 	<author>jtatia</author>
 	<description>
 			${project.parent.description}
 	</description>
 
-	<activator>org.openmrs.TagActivator</activator>
+	<activator>org.openmrs.tag.TagActivator</activator>
 	
 	<!-- /Base Module Properties -->
 	

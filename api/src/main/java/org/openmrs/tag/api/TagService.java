@@ -7,13 +7,13 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.api;
+package org.openmrs.tag.api;
 
 import org.openmrs.OpenmrsObject;
-import org.openmrs.TagConstants;
+import org.openmrs.tag.TagConstants;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.Tag;
+import org.openmrs.tag.Tag;
 import org.openmrs.api.context.Context;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
  *   List&lt;Tag&gt; tags = Context.getService(TagService.class).getAllTags();
  * </code>
  * 
- * @see org.openmrs.Tag
+ * @see org.openmrs.tag.Tag
  */
 
 public interface TagService extends OpenmrsService {
