@@ -12,10 +12,10 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.api.db;
+package org.openmrs.tag.api.db;
 
 import org.openmrs.OpenmrsObject;
-import org.openmrs.Tag;
+import org.openmrs.tag.Tag;
 import org.openmrs.api.APIException;
 
 import java.util.List;
@@ -23,52 +23,52 @@ import java.util.List;
 public interface TagDAO {
 	
 	/**
-	 * @see org.openmrs.api.TagService#getTagByUuid(String)
+	 * @see org.openmrs.tag.api.TagService#getTagByUuid(String)
 	 */
 	Tag getTagByUuid(String uuid);
 	
 	/**
-	 * @see org.openmrs.api.TagService#getTag(Integer)
+	 * @see org.openmrs.tag.api.TagService#getTag(Integer)
 	 */
 	Tag getTag(Integer id);
 	
 	/**
-	 * @see org.openmrs.api.TagService#getTags(String, boolean)
+	 * @see org.openmrs.tag.api.TagService#getTags(String, boolean)
 	 */
 	List<Tag> getTags(String tag, boolean exactMatch);
 	
 	/**
-	 * @see org.openmrs.api.TagService#getTags(OpenmrsObject)
+	 * @see org.openmrs.tag.api.TagService#getTags(OpenmrsObject)
 	 */
 	List<Tag> getTags(OpenmrsObject openmrsObject);
 	
 	/**
-	 * @see org.openmrs.api.TagService#getTags(String, String)
+	 * @see org.openmrs.tag.api.TagService#getTags(String, String)
 	 */
 	List<Tag> getTags(String objectType, String objectUuid);
 	
 	/**
-	 * @see org.openmrs.api.TagService#saveTag(Tag)
+	 * @see org.openmrs.tag.api.TagService#saveTag(Tag)
 	 */
 	Tag saveTag(Tag tag);
 	
 	/**
-	 * @see org.openmrs.api.TagService#purgeTag(Tag)
+	 * @see org.openmrs.tag.api.TagService#purgeTag(Tag)
 	 */
 	void deleteTag(Tag tag);
 	
 	/**
-	 * @see org.openmrs.api.TagService#getAllTags()
+	 * @see org.openmrs.tag.api.TagService#getAllTags()
 	 */
 	List<String> getAllTags();
 	
 	/**
-	 * @see org.openmrs.api.TagService#getTags(List, List)
+	 * @see org.openmrs.tag.api.TagService#getTags(List, List)
 	 */
 	List<Tag> getTags(List<String> objectType, List<String> tags);
 	
 	/**
-	 * @see org.openmrs.api.impl.TagServiceImpl#getObject(Class, String)
+	 * @see org.openmrs.tag.api.impl.TagServiceImpl#getObject(Class, String)
 	 */
 	<T extends OpenmrsObject> T getObject(Class<T> objectType, String objectUuid);
 	

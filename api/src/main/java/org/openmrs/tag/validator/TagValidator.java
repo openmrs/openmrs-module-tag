@@ -1,6 +1,6 @@
-package org.openmrs.validator;
+package org.openmrs.tag.validator;
 
-import org.openmrs.Tag;
+import org.openmrs.tag.Tag;
 import org.openmrs.annotation.Handler;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;

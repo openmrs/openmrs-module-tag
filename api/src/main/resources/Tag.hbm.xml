@@ -15,7 +15,7 @@
 -->
 
 
-<hibernate-mapping package="org.openmrs">
+<hibernate-mapping package="org.openmrs.tag">
     <class name="Tag" table="tag_tag">
         <id name="id" column="tag_id" unsaved-value="0">
             <generator class="native">
@@ -28,7 +28,7 @@
                   column="object_uuid" length="38" not-null="true"/>
         <property name="objectType" type="java.lang.String"
                   column="object_type" length="255" not-null="true" />
-        <many-to-one name="creator" class="User" column="creator" not-null="true"/>
+        <many-to-one name="creator" class="org.openmrs.User" column="creator" not-null="true"/>
         <property name="dateCreated" type="java.util.Date" column="date_created" length="19" not-null="true"/>
         <property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true"/>
     </class>

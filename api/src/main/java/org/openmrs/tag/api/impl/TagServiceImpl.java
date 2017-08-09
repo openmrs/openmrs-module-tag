@@ -7,16 +7,17 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.api.impl;
+package org.openmrs.tag.api.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.api.APIException;
-import org.openmrs.Tag;
-import org.openmrs.api.TagService;
+import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.tag.Tag;
+import org.openmrs.tag.api.TagService;
 import org.openmrs.api.context.Context;
-import org.openmrs.api.db.TagDAO;
+import org.openmrs.tag.api.db.TagDAO;
 import org.openmrs.util.OpenmrsClassLoader;
 import org.springframework.transaction.annotation.Transactional;
 
