@@ -11,12 +11,12 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.web.rest.resource;
+package org.openmrs.module.tag.web.rest.resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.OpenmrsObject;
-import org.openmrs.Tag;
-import org.openmrs.api.TagService;
+import org.openmrs.module.tag.Tag;
+import org.openmrs.module.tag.api.TagService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
