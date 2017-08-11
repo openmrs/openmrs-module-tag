@@ -1,21 +1,25 @@
 
-var app  = angular.module('Tag',['tagService','ngDialog']);
+var app  = angular.module('Tag',['tagService','ngDialog','uicommons.common.error']);
 
 
-app.controller('tagCtrl',['$scope','TagService','ngDialog',function ($scope,TagService,ngDialog) {
+app.controller('tagCtrl',['$scope','TagService','ngDialog',
+    function ($scope,TagService,ngDialog) {
+    var personUuid;
     $scope.init = function(personUuid) {
-            $scope.thisPersonUuid = personUuid;
-          $scope.loadTags =function () {
-              var payload = {
-                  objectType: 'org.openmrs.Person',
-                  objectUuid: personUuid
-              };
-              TagService.getTags(payload).then(function (res) {
-                  $scope.tags = res;
-              });
-          }
-         $scope.loadTags();
+      $scope.thisPersonUuid = personUuid;
     }
+       /**
+         * Method to load Tags
+         */
+        var loadTags =function () {
+            var payload = {
+                objectType: 'org.openmrs.Person',
+                objectUuid: $scope.thisPersonUuid
+            };
+            TagService.getTags(payload).then(function (res) {
+                $scope.tags = res;
+            });
+        };
 
         /**
          * Delete Tag Dialog
@@ -30,13 +34,15 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',function ($scope,TagS
                 }),
                    template: 'dialogTemplate'
             }).then(function() {
-                TagService.deleteTag(tag);
-                var index = $scope.tags.indexOf(tag);
-                $scope.tags.splice(index, 1);
-            }, function() {
+                TagService.deleteTag(tag).then(function (res) {
+                    loadTags();
+                })
             });
         };
 
+    /**
+     * Add Tag Dialog
+     */
     $scope.showAddDialog = function() {
         ngDialog.openConfirm({
             showClose: false,
@@ -49,9 +55,10 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',function ($scope,TagS
                 objectType:"org.openmrs.Person",
                 objectUuid:$scope.thisPersonUuid
             };
-           TagService.createTag(Tag);
-           $scope.loadTags();
+           TagService.createTag(Tag).then(function (res) {
+               loadTags();
+           })
         });
-    }
-
-}]);
+    };
+        loadTags();
+    }]);

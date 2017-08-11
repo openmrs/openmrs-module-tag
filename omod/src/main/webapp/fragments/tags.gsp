@@ -1,6 +1,7 @@
 <%
     ui.includeJavascript("uicommons", "angular.min.js")
     ui.includeJavascript("tag","app.js")
+    ui.includeJavascript("uicommons", "angular-common-error.js")
     ui.includeJavascript("tag", "service/tagService.js")
     ui.includeJavascript("uicommons", "angular.js")
     ui.includeJavascript("uicommons", "angular-resource.min.js")
@@ -26,7 +27,6 @@
         </div>
         </script>
 
-
         <i class="icon-tags"></i>
         <h3>${ ui.message("tag.HeaderMessage").toUpperCase() }</h3>
         <a ng-click="showAddDialog()"><i class="icon-plus add-action right"></i></a>
@@ -50,9 +50,9 @@
                 </script>
                 <ul>
                     <li ng-repeat="tag in tags">
-                        {{ tag.display }}<a ng-click="showDialog(tag)"><i class="icon-remove delete-action right" title="DELETE"></i></a>
+                        {{ tag.display }}<a ng-click="showDialog(tag)"><i class="icon-remove delete-action right" title=${ui.message("tag.deleteTitle")}></i></a>
                     </li>
                 </ul>
-                <p ng-show=" tags === null ">None</p>
+                <p ng-show=" tags.length === 0 || tags == null">${ui.message("tag.Empty")}</p>
     </div>
     </div>

@@ -47,39 +47,6 @@
 				<type>test-jar</type>
 				<scope>test</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.openmrs.module</groupId>
-				<artifactId>uicommons-omod</artifactId>
-				<version>${uicommonsVersion}</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.openmrs.module</groupId>
-				<artifactId>uiframework-api</artifactId>
-				<version>${uiframeworkVersion}</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.openmrs.module</groupId>
-				<artifactId>appframework-api</artifactId>
-				<version>${appframeworkVersion}</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.openmrs.module</groupId>
-				<artifactId>appui-api</artifactId>
-				<version>${appuiVersion}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.openmrs.module</groupId>
-				<artifactId>coreapps-api</artifactId>
-				<version>${coreappsVersion}</version>
-				<scope>provided</scope>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -113,8 +80,6 @@
 		<uiframeworkVersion>3.11.0</uiframeworkVersion>
 		<uicommonsModuleVersion>2.1</uicommonsModuleVersion>
 		<appframeworkVersion>2.10</appframeworkVersion>
-		<openmrsTestutilsVersion>1.5</openmrsTestutilsVersion>
-		<coreAppsVersion>1.11.1</coreAppsVersion>
 		<appuiVersion>1.7</appuiVersion>
 	</properties>
 </project>
