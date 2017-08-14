@@ -1,10 +1,7 @@
 <%
-    ui.includeJavascript("uicommons", "angular.min.js")
     ui.includeJavascript("tag","app.js")
     ui.includeJavascript("uicommons", "angular-common-error.js")
     ui.includeJavascript("tag", "service/tagService.js")
-    ui.includeJavascript("uicommons", "angular.js")
-    ui.includeJavascript("uicommons", "angular-resource.min.js")
     ui.includeJavascript("uicommons", "ngDialog/ngDialog.js")
     ui.includeCss("uicommons", "ngDialog/ngDialog.min.css")
 
@@ -18,7 +15,7 @@
         </div>
         <div class="dialog-content">
             <div style="text-align:center;">
-                <input type="text"  placeholder="Enter Tag" ng-model="addedTag" />
+                <input type="text"  placeholder=${ ui.message("tag.enterTag")} ng-model="addedTag" />
             </div>
             <div>
                 <button class="confirm right" ng-click="confirm(addedTag)">${ ui.message("uicommons.save") }</button>
@@ -39,7 +36,7 @@
                 <div class="dialog-content">
                     <div>
                         <label>
-                            <%= ui.message("tag.deleteTagMessage", "{{ ngDialogData.tag }}") %>
+                            <%= ui.message("tag.deleteTagMessage", "{{ ngDialogData.display }}") %>
                         </label>
                     </div>
                     <div>

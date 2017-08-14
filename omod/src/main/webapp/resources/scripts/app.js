@@ -4,10 +4,12 @@ var app  = angular.module('Tag',['tagService','ngDialog','uicommons.common.error
 
 app.controller('tagCtrl',['$scope','TagService','ngDialog',
     function ($scope,TagService,ngDialog) {
-    var personUuid;
-    $scope.init = function(personUuid) {
-      $scope.thisPersonUuid = personUuid;
-    }
+
+       $scope.init = function (patientUuid) {
+        $scope.thisPersonUuid = patientUuid;
+        loadTags();
+       }
+
        /**
          * Method to load Tags
          */
@@ -29,10 +31,8 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',
                 showClose: false,
                 closeByEscape: true,
                 closeByDocument: true,
-                data: angular.toJson({
-                    tag: tag.display
-                }),
-                   template: 'dialogTemplate'
+                data: tag,
+                template: 'dialogTemplate'
             }).then(function() {
                 TagService.deleteTag(tag).then(function (res) {
                     loadTags();
@@ -60,5 +60,4 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',
            })
         });
     };
-        loadTags();
     }]);
