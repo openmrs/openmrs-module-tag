@@ -64,8 +64,8 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',
     $scope.navigate = function (tag) {
         emr.navigateTo({
             provider: 'tag',
-            page: 'tagList',
-            query: { tag: tag.display }
+            page: 'taggedObjects',
+            query: { tag : tag.display }
         });
     };
 }]);

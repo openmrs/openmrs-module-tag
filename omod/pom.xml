@@ -63,7 +63,7 @@
 			<version>${uiframeworkVersion}</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<finalName>${project.parent.artifactId}-${project.parent.version}</finalName>

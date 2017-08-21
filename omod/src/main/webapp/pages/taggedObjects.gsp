@@ -1,0 +1,33 @@
+<%
+    ui.decorateWith("appui", "standardEmrPage")
+    ui.includeJavascript("uicommons", "angular.min.js")
+    ui.includeJavascript("uicommons", "angular-resource.min.js")
+    ui.includeJavascript("uicommons", "angular-app.js")
+    ui.includeJavascript("uicommons", "angular-common.js")
+    ui.includeJavascript("tag","taggedObjects.js")
+    ui.includeJavascript("tag", "service/tagService.js")
+    ui.includeJavascript("uicommons", "services/personService.js")
+%>
+
+<div class="taggedObjects_display" ng-app="taggedObjects" ng-controller="taggedObjectsCtrl" ng-init="init()">
+
+    <h2> <%= ui.message("tag.taggedListHeading", "{{ tag }}") %></h2>
+    <table id="taggedPersons" width="100%" border="1" cellspacing="0" cellpadding="2">
+        <thead>
+        <tr>
+            <th>${ ui.message("tag.patientName") }</th>
+            <th>${ ui.message("tag.patientGender") }</th>
+            <th>${ ui.message("tag.patientAge") }</th>
+            <th>${ ui.message("tag.BirthDate") }</th>
+        </tr>
+        </thead>
+   <tbody>
+        <tr ng-repeat="patient in patients">
+            <td>{{patient.display}}</td>
+            <td>{{patient.gender}}</td>
+            <td>{{patient.age}}</td>
+            <td>{{patient.birthdate}}</td>
+        </tr>
+   </tbody>
+    </table>
+</div>
