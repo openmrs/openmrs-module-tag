@@ -6,7 +6,7 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',
     function ($scope,TagService,ngDialog) {
 
        $scope.init = function (patientUuid) {
-        $scope.thisPersonUuid = patientUuid;
+        $scope.thisPatientUuid = patientUuid;
         loadTags();
        }
 
@@ -15,8 +15,8 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',
          */
         var loadTags =function () {
             var payload = {
-                objectType: 'org.openmrs.Person',
-                objectUuid: $scope.thisPersonUuid
+                objectType: 'org.openmrs.Patient',
+                objectUuid: $scope.thisPatientUuid
             };
             TagService.getTags(payload).then(function (res) {
                 $scope.tags = res;
@@ -52,8 +52,8 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',
         }).then(function(addedTag) {
             var Tag = {
                 tag:addedTag,
-                objectType:"org.openmrs.Person",
-                objectUuid:$scope.thisPersonUuid
+                objectType:"org.openmrs.Patient",
+                objectUuid:$scope.thisPatientUuid
             };
            TagService.createTag(Tag).then(function (res) {
                loadTags();

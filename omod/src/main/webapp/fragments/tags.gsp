@@ -47,7 +47,7 @@
                 </script>
                 <ul>
                     <li ng-repeat="tag in tags">
-                        <a ng-click="navigate(tag)">{{ tag.display }}</a><a ng-click="showDialog(tag)"><i class="icon-remove delete-action right" title=${ui.message("tag.deleteTitle")}></i></a>
+                        <a ng-click="navigate(tag)" style="color:inherit;text-decoration: none">{{ tag.display }}</a><a ng-click="showDialog(tag)"><i class="icon-remove delete-action right" title=${ui.message("tag.deleteTitle")}></i></a>
                     </li>
                 </ul>
                 <p ng-show=" tags.length === 0 || tags == null">${ui.message("tag.Empty")}</p>

@@ -1,24 +1,20 @@
 
 var app = angular.module('taggedObjects',['personService','tagService']);
 
-app.config(['$locationProvider', function($locationProvider){
-    $locationProvider.html5Mode({
-        enabled: true,
-        requireBase: false
-    });
-}]);
+app.controller('taggedObjectsCtrl',['$scope','Person','TagService',
+    function ($scope,Person,TagService) {
 
-app.controller('taggedObjectsCtrl',['$scope','$location','Person','TagService', function ($scope,$location,Person,TagService) {
-
-    var tags = [];
-    $scope.init = function () {
-        $scope.tag = $location.search().tag;
+    $scope.init = function (tag) {
+        $scope.tag = tag;
         loadTags();
     }
 
-    var loadTags =function () {
+    var tags = [];
+    $scope.dataLoaded = false;
+
+    var loadTags = function () {
         var payload = {
-            objectType: 'org.openmrs.Person',
+            objectType: 'org.openmrs.Patient',
             tag: $scope.tag,
             v: 'full'
         };
@@ -30,12 +26,17 @@ app.controller('taggedObjectsCtrl',['$scope','$location','Person','TagService', 
 
     $scope.patients = [];
     var loadPatients = function () {
+        var count = 0;
         angular.forEach(tags, function (t) {
             var payload = {
                 uuid: t.objectUuid,
             }
            Person.get(payload).$promise.then(function (res) {
                $scope.patients.push(res);
+               count=count+1;
+               if (count == tags.length){
+                   $scope.dataLoaded = true;
+               }
            });
         });
     };
