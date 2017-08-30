@@ -37,7 +37,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceHandler;
 import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ConversionException;
-import org.openmrs.module.webservices.rest.web.response.IllegalRequestException;
+import org.openmrs.module.webservices.rest.web.response.GenericRestException;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.util.OpenmrsClassLoader;
@@ -282,10 +282,10 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 			} else if (StringUtils.isNotBlank(objectUuid)) {
 				return new NeedsPaging<Tag>(getService().getTags(objectType, objectUuid), context);
 			} else {
-				throw new IllegalRequestException();
+				throw new GenericRestException();
 			}
 		} else {
-			throw new IllegalRequestException();
+			throw new GenericRestException();
 		}
 	}
 }

@@ -1,13 +1,15 @@
 <%
-    ui.includeJavascript("tag","app.js")
+    ui.includeJavascript("uicommons", "angular.min.js")
+    ui.includeJavascript("uicommons", "angular-resource.min.js")
     ui.includeJavascript("uicommons", "angular-common-error.js")
+    ui.includeJavascript("tag","app.js")
     ui.includeJavascript("tag", "service/tagService.js")
     ui.includeJavascript("uicommons", "ngDialog/ngDialog.js")
     ui.includeCss("uicommons", "ngDialog/ngDialog.min.css")
 
 %>
 
-<div class="info-section tags" ng-app="Tag" ng-controller="tagCtrl" ng-init="init('${ patient.patient.uuid }')">
+<div class="info-section tags" ng-app="tag.Tag" ng-controller="tagCtrl" ng-init="init('${ patient.patient.uuid }')">
     <div class="info-header">
         <script type="text/ng-template" id="addDialogTemplate">
         <div class="dialog-header">
