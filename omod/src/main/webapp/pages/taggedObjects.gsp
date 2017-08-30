@@ -9,7 +9,7 @@
     ui.includeJavascript("uicommons", "services/personService.js")
 %>
 
-<div class="taggedObjects_display" ng-app="taggedObjects" ng-controller="taggedObjectsCtrl" ng-init="init('${param.tag[0]}')">
+<div class="taggedObjects_display" ng-app="tag.taggedObjects" ng-controller="taggedObjectsCtrl" ng-init="init('${param.tag[0]}')">
     <h2> <%= ui.message("tag.taggedListHeading", "{{ tag }}") %></h2>
     <table id="taggedPersons" width="100%" border="1" cellspacing="0" cellpadding="2" ng-show="dataLoaded">
         <thead>

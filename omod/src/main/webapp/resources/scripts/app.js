@@ -1,5 +1,5 @@
 
-var app  = angular.module('Tag',['tagService','ngDialog','uicommons.common.error']);
+var app  = angular.module('tag.Tag',['tagService','ngDialog','uicommons.common.error']);
 
 
 app.controller('tagCtrl',['$scope','TagService','ngDialog',

@@ -1,5 +1,5 @@
 
-var app = angular.module('taggedObjects',['personService','tagService']);
+var app = angular.module('tag.taggedObjects',['personService','tagService']);
 
 app.controller('taggedObjectsCtrl',['$scope','Person','TagService',
     function ($scope,Person,TagService) {
