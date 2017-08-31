@@ -5,8 +5,9 @@ var app  = angular.module('tag.Tag',['tagService','ngDialog','uicommons.common.e
 app.controller('tagCtrl',['$scope','TagService','ngDialog',
     function ($scope,TagService,ngDialog) {
 
-       $scope.init = function (patientUuid) {
+       $scope.init = function (patientUuid, returnUrl) {
         $scope.thisPatientUuid = patientUuid;
+        $scope.returnUrl = returnUrl;
         loadTags();
        }
 
@@ -65,7 +66,7 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',
         emr.navigateTo({
             provider: 'tag',
             page: 'taggedObjects',
-            query: { tag : tag.display }
+            query: { tag : tag.display, returnUrl: $scope.returnUrl }
         });
     };
 }]);

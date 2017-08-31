@@ -9,7 +9,15 @@
     ui.includeJavascript("uicommons", "services/personService.js")
 %>
 
-<div class="taggedObjects_display" ng-app="tag.taggedObjects" ng-controller="taggedObjectsCtrl" ng-init="init('${param.tag[0]}')">
+<script type="text/javascript">
+
+    var breadcrumbs = [
+        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
+        { label: "${ ui.message("tag.home.title") }"},
+    ];
+</script>
+
+<div class="taggedObjects_display" ng-app="tag.taggedObjects" ng-controller="taggedObjectsCtrl" ng-init="init('${param.tag[0]}','${param.returnUrl[0]}')">
     <h2> <%= ui.message("tag.taggedListHeading", "{{ tag }}") %></h2>
     <table id="taggedPersons" width="100%" border="1" cellspacing="0" cellpadding="2" ng-show="dataLoaded">
         <thead>
@@ -29,4 +37,9 @@
         </tr>
    </tbody>
     </table>
+    <div><br/>
+        <button ng-click="navigate()">
+            ${ ui.message("uicommons.return") }
+        </button>
+    </div>
 </div>

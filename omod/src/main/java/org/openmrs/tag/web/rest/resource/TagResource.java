@@ -68,7 +68,7 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 	public Tag getByUniqueId(String uuid) {
 		
 		try {
-			UUID uuid1 = UUID.fromString(uuid);
+			UUID.fromString(uuid);
 			return Context.getService(TagService.class).getTagByUuid(uuid);
 		}
 		catch (IllegalArgumentException e) {
@@ -87,7 +87,11 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 	 */
 	@Override
 	public Tag save(Tag tag) {
-		return getService().saveTag(tag);
+		try {
+			return getService().saveTag(tag);
+		}
+		catch (IllegalArgumentException e) {}
+		return null;
 	}
 	
 	/**
