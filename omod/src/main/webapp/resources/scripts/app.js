@@ -56,9 +56,18 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',
                 objectType:"org.openmrs.Patient",
                 objectUuid:$scope.thisPatientUuid
             };
-           TagService.createTag(Tag).then(function (res) {
-               loadTags();
-           })
+            var count = 1, check = true;
+            angular.forEach($scope.tags, function (t) {
+                if (check && addedTag.localeCompare(t.display) == 0){
+                    count = 0;
+                    check = false;
+                }
+            });
+            if (count == 1) {
+                TagService.createTag(Tag).then(function (res) {
+                    loadTags();
+                })
+            }
         });
     };
 

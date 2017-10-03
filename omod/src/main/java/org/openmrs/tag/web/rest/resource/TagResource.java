@@ -87,11 +87,7 @@ public class TagResource extends DelegatingCrudResource<Tag> {
 	 */
 	@Override
 	public Tag save(Tag tag) {
-		try {
-			return getService().saveTag(tag);
-		}
-		catch (IllegalArgumentException e) {}
-		return null;
+		return getService().saveTag(tag);
 	}
 	
 	/**
