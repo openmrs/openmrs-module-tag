@@ -4,8 +4,9 @@ var app = angular.module('tag.taggedObjects',['personService','tagService']);
 app.controller('taggedObjectsCtrl',['$scope','Person','TagService',
     function ($scope,Person,TagService) {
 
-    $scope.init = function (tag) {
+    $scope.init = function (tag,returnUrl) {
         $scope.tag = tag;
+        $scope.returnUrl = returnUrl;
         loadTags();
     }
 
@@ -40,4 +41,7 @@ app.controller('taggedObjectsCtrl',['$scope','Person','TagService',
            });
         });
     };
-}]);
+    $scope.navigate = function () {
+        emr.navigateTo({ url: $scope.returnUrl });
+    };
+    }]);

@@ -58,7 +58,11 @@ public class TagServiceImpl extends BaseOpenmrsService implements TagService {
 		if (getObject(toClass(tag.getObjectType()), tag.getObjectUuid()) == null) {
 			log.warn("Object does not exist in the the database");
 		}
-		return dao.saveTag(tag);
+		if (hasTag(getObject(toClass(tag.getObjectType()), tag.getObjectUuid()), tag.getTag())) {
+			throw new IllegalArgumentException("Duplicate Tag");
+		} else {
+			return dao.saveTag(tag);
+		}
 	}
 	
 	/**

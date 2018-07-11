@@ -5,8 +5,9 @@ var app  = angular.module('tag.Tag',['tagService','ngDialog','uicommons.common.e
 app.controller('tagCtrl',['$scope','TagService','ngDialog',
     function ($scope,TagService,ngDialog) {
 
-       $scope.init = function (patientUuid) {
+       $scope.init = function (patientUuid, returnUrl) {
         $scope.thisPatientUuid = patientUuid;
+        $scope.returnUrl = returnUrl;
         loadTags();
        }
 
@@ -55,9 +56,18 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',
                 objectType:"org.openmrs.Patient",
                 objectUuid:$scope.thisPatientUuid
             };
-           TagService.createTag(Tag).then(function (res) {
-               loadTags();
-           })
+            var count = 1, check = true;
+            angular.forEach($scope.tags, function (t) {
+                if (check && addedTag.localeCompare(t.display) == 0){
+                    count = 0;
+                    check = false;
+                }
+            });
+            if (count == 1) {
+                TagService.createTag(Tag).then(function (res) {
+                    loadTags();
+                })
+            }
         });
     };
 
@@ -65,7 +75,7 @@ app.controller('tagCtrl',['$scope','TagService','ngDialog',
         emr.navigateTo({
             provider: 'tag',
             page: 'taggedObjects',
-            query: { tag : tag.display }
+            query: { tag : tag.display, returnUrl: $scope.returnUrl }
         });
     };
 }]);

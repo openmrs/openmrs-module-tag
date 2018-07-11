@@ -9,7 +9,7 @@
 
 %>
 
-<div class="info-section tags" ng-app="tag.Tag" ng-controller="tagCtrl" ng-init="init('${ patient.patient.uuid }')">
+<div class="info-section tags" ng-app="tag.Tag" ng-controller="tagCtrl" ng-init="init('${ patient.patient.uuid }','${ui.urlBind("/" + contextPath + dashboardUrl, [ patientId: patient.patient.id ] )}')">
     <div class="info-header">
         <script type="text/ng-template" id="addDialogTemplate">
         <div class="dialog-header">
@@ -48,8 +48,9 @@
                 </div>
                 </script>
                 <ul>
-                    <li ng-repeat="tag in tags">
-                        <a ng-click="navigate(tag)" style="color:inherit;text-decoration: none">{{ tag.display }}</a><a ng-click="showDialog(tag)"><i class="icon-remove delete-action right" title=${ui.message("tag.deleteTitle")}></i></a>
+                    <li ng-repeat="tag in tags" class="tag-icon-right">
+                        <a ng-click="navigate(tag)" style="color:inherit;text-decoration: none; cursor: pointer">{{ tag.display }}</a>
+                        <a ng-click="showDialog(tag)" class="right" style="color:inherit;text-decoration: none;"><i class="icon-remove delete-action" title=${ui.message("tag.deleteTitle")}></i></a>
                     </li>
                 </ul>
                 <p ng-show=" tags.length === 0 || tags == null">${ui.message("tag.Empty")}</p>
